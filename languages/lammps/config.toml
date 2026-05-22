@@ -1,0 +1,4 @@
+name = "LAMMPS"
+grammar = "lammps"
+path_suffixes = [".in"]
+line_comments = ["#"]

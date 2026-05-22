@@ -1,0 +1,16 @@
+# Build output
+/target/
+*.wasm
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Dependencies
+node_modules/

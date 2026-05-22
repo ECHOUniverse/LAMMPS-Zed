@@ -1,0 +1,101 @@
+# LAMMPS 示例输入脚本
+# 覆盖主要语法特性，用于测试语法高亮
+
+# ============================================================
+# 初始化设置
+# ============================================================
+units           metal
+dimension       3
+boundary        p p p
+atom_style      atomic
+
+# ============================================================
+# 变量定义
+# ============================================================
+variable        T equal 300.0
+variable        P equal 1.0
+variable        Nstep equal 10000
+variable        dump_interval equal 100
+variable        x index 1 2 3 4 5
+variable        name string "water"
+
+# ============================================================
+# 系统定义
+# ============================================================
+lattice         fcc 3.615
+region          box block 0 10 0 10 0 10
+create_box      1 box
+create_atoms    1 box
+
+# ============================================================
+# 力场设置
+# ============================================================
+pair_style      eam/alloy
+pair_coeff      * * Fe.eam Fe
+mass            1 55.845
+
+# ============================================================
+# Fix 用于指定系综和时间积分
+# ============================================================
+fix             1 all npt temp ${T} ${T} 0.1 iso ${P} ${P} 1.0
+fix             2 all nve
+fix             recenter all recenter 0 0 0
+
+# ============================================================
+# Compute 用于计算物理量
+# ============================================================
+compute         myTemp all temp
+compute         myPe all pe
+compute         displace all displace/atom
+compute         rdf all rdf 100 1 1
+
+# ============================================================
+# 变量引用 - 多种引用方式
+# ============================================================
+variable        ke equal ke
+variable        pe equal pe
+variable        etot equal v_ke+v_pe
+variable        temp2 equal c_myTemp
+variable        fx equal f_1[1]
+
+# 花括号和圆括号展开
+variable        msg string "Temperature = ${T}"
+variable        result equal $(1.0 + 2.0 * 3.0)
+
+# ============================================================
+# 字符串类型
+# ============================================================
+variable        str1 string "双引号字符串"
+variable        str2 string '单引号原始字符串'
+variable        str3 string """三引号
+多行字符串
+"""
+
+# ============================================================
+# ============================================================
+thermo          100
+thermo_style    custom step temp pe ke press vol
+thermo_modify   lost ignore
+
+dump            1 all atom ${dump_interval} dump.lammpstrj
+dump            recenter all custom ${dump_interval} dump.recenter id type x y z
+
+# 行续接示例
+variable        long_formula equal &
+                1.0 + 2.0 * sqrt(v_ke) + exp(-v_pe)
+
+# ============================================================
+# 运行与控制
+# ============================================================
+timestep        0.001
+run             ${Nstep}
+
+# 条件与跳转
+if              "${T} > 500.0" then "jump SELF high_temp"
+
+# ============================================================
+# 布尔与表达式
+# ============================================================
+variable        flag1 equal true
+variable        flag2 equal false
+variable        test equal (v_ke > v_pe) && ${T} < 500.0
