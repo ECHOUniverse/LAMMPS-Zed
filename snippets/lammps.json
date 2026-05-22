@@ -1,0 +1,132 @@
+{
+  "Fix NPT": {
+    "prefix": "fix npt",
+    "body": ["fix ${1:ID} ${2:group} npt temp ${3:T_start} ${4:T_stop} ${5:T_damp} iso ${6:P_start} ${7:P_stop} ${8:P_damp}"],
+    "description": "NPT ensemble fix"
+  },
+  "Fix NVE": {
+    "prefix": "fix nve",
+    "body": ["fix ${1:ID} ${2:group} nve"],
+    "description": "NVE ensemble fix"
+  },
+  "Fix NVT": {
+    "prefix": "fix nvt",
+    "body": ["fix ${1:ID} ${2:group} nvt temp ${3:T_start} ${4:T_stop} ${5:T_damp}"],
+    "description": "NVT ensemble fix"
+  },
+  "Fix langevin": {
+    "prefix": "fix langevin",
+    "body": ["fix ${1:ID} ${2:group} langevin ${3:T_start} ${4:T_stop} ${5:T_damp} ${6:seed}"],
+    "description": "Langevin thermostat fix"
+  },
+  "Variable equal": {
+    "prefix": "variable",
+    "body": ["variable ${1:name} equal ${2:value}"],
+    "description": "Define equal-style variable"
+  },
+  "Variable string": {
+    "prefix": "variable string",
+    "body": ["variable ${1:name} string \"${2:value}\""],
+    "description": "Define string-style variable"
+  },
+  "Variable index": {
+    "prefix": "variable index",
+    "body": ["variable ${1:name} index ${2:value1} ${3:value2} ${4:value3}"],
+    "description": "Define index-style variable"
+  },
+  "Variable loop": {
+    "prefix": "variable loop",
+    "body": ["variable ${1:name} loop ${2:N}"],
+    "description": "Define loop-style variable"
+  },
+  "Compute": {
+    "prefix": "compute",
+    "body": ["compute ${1:ID} ${2:group} ${3:style} ${4:args}"],
+    "description": "Define a compute"
+  },
+  "Compute temp": {
+    "prefix": "compute temp",
+    "body": ["compute ${1:ID} ${2:group} temp"],
+    "description": "Temperature compute"
+  },
+  "Compute pe": {
+    "prefix": "compute pe",
+    "body": ["compute ${1:ID} ${2:group} pe"],
+    "description": "Potential energy compute"
+  },
+  "Thermo settings": {
+    "prefix": "thermo",
+    "body": ["thermo ${1:interval}"],
+    "description": "Set thermo output frequency"
+  },
+  "Thermo style": {
+    "prefix": "thermo_style",
+    "body": ["thermo_style custom step temp press pe ke vol"],
+    "description": "Custom thermo output"
+  },
+  "Thermo modify": {
+    "prefix": "thermo_modify",
+    "body": ["thermo_modify lost ignore"],
+    "description": "Modify thermo output settings"
+  },
+  "Dump custom": {
+    "prefix": "dump",
+    "body": ["dump ${1:ID} ${2:group} custom ${3:interval} ${4:file} id type x y z"],
+    "description": "Custom dump command"
+  },
+  "Dump atom": {
+    "prefix": "dump atom",
+    "body": ["dump ${1:ID} ${2:group} atom ${3:interval} ${4:file}"],
+    "description": "Atom-style dump"
+  },
+  "Region block": {
+    "prefix": "region",
+    "body": ["region ${1:ID} block ${2:xlo} ${3:xhi} ${4:ylo} ${5:yhi} ${6:zlo} ${7:zhi}"],
+    "description": "Define a block region"
+  },
+  "Region sphere": {
+    "prefix": "region sphere",
+    "body": ["region ${1:ID} sphere ${2:cx} ${3:cy} ${4:cz} ${5:radius}"],
+    "description": "Define a spherical region"
+  },
+  "Pair style": {
+    "prefix": "pair_style",
+    "body": ["pair_style ${1:style} ${2:args}"],
+    "description": "Set pair style"
+  },
+  "Pair coeff": {
+    "prefix": "pair_coeff",
+    "body": ["pair_coeff ${1:itype} ${2:jtype} ${3:args}"],
+    "description": "Set pair coefficients"
+  },
+  "Lattice": {
+    "prefix": "lattice",
+    "body": ["lattice ${1:style} ${2:lattice_constant}"],
+    "description": "Define lattice structure"
+  },
+  "Timestep": {
+    "prefix": "timestep",
+    "body": ["timestep ${1:dt}"],
+    "description": "Set simulation timestep"
+  },
+  "Run": {
+    "prefix": "run",
+    "body": ["run ${1:Nsteps}"],
+    "description": "Run simulation for N steps"
+  },
+  "Shell command": {
+    "prefix": "shell",
+    "body": ["shell ${1:command}"],
+    "description": "Execute shell command"
+  },
+  "If condition": {
+    "prefix": "if",
+    "body": ["if \"${1:condition}\" then \"${2:command}\""],
+    "description": "Conditional execution"
+  },
+  "Section header": {
+    "prefix": "#=",
+    "body": ["# ============================================================", "# ${1:section name}", "# ============================================================"],
+    "description": "Section header comment"
+  }
+}

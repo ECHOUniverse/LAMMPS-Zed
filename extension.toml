@@ -6,6 +6,7 @@ authors = ["hanxu <eisult@foxmail.com>"]
 description = "LAMMPS molecular dynamics input script (.in) syntax highlighting for Zed"
 repository = "https://github.com/hanxu/LAMMPS-Zed"
 languages = ["languages/lammps"]
+snippets = ["./snippets/lammps.json"]
 
 [grammars.lammps]
 repository = "https://github.com/ECHOUniverse/tree-sitter-lammps"

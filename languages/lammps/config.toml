@@ -2,3 +2,5 @@ name = "LAMMPS"
 grammar = "lammps"
 path_suffixes = ["in"]
 line_comments = ["#"]
+word_characters = ["$", "_"]
+increase_indent_pattern = "&\\s*$"
