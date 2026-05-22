@@ -4,94 +4,101 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目概述
 
-这是一个 Zed 编辑器的 **LAMMPS `.in` 输入脚本语法解析扩展**。基于 Tree-sitter 语法解析器，为 LAMMPS 分子动力学模拟的输入脚本提供语法高亮、代码结构等语言支持。
+这是一个 Zed 编辑器的 **LAMMPS `.in` 输入脚本语法高亮扩展**，基于 Tree-sitter 语法解析器。
+
+目前已实现：
+- 语法高亮（highlights.scm）：9 类节点映射（keyword, constant, number, function, property, type, comment, string, operator）
+- 括号匹配（brackets.scm）：`()`, `[]`, `${}`
+- 代码大纲（outline.scm）：fix/compute/variable 定义
 
 ## 语言与交流
 
 - **始终使用中文回复用户**
 - 遇到不确定的项目决策时，直接询问用户，不自行猜测
 
-## Zed 扩展架构
-
-Zed 扩展使用 Tree-sitter 解析器提供语言支持。扩展目录结构：
+## 项目结构
 
 ```
-lammps-extension/
-  extension.toml          # 扩展清单（必选）
-  Cargo.toml              # Rust 项目配置（需要 cdylib 输出）
-  src/
-    lib.rs                # Rust 扩展入口
-  languages/
-    lammps/
-      config.toml         # 语言元数据定义
-      highlights.scm      # 语法高亮查询规则
+LAMMPS-Zed/
+  extension.toml                  # 扩展清单
+  languages/lammps/
+    config.toml                   # 语言元数据
+    highlights.scm                # 语法高亮规则
+    brackets.scm                  # 括号匹配
+    outline.scm                   # 代码大纲
+  examples/
+    input.in                      # 示例 LAMMPS 输入脚本
 ```
 
-### 关键文件职责
+**注意**：本项目是纯 Tree-sitter 语法扩展，不需要 Cargo.toml 和 Rust 代码。Zed 根据 `extension.toml` 中 `[grammars]` 配置自动下载并编译 grammar 为 WASM。
 
-- **extension.toml** — 扩展元数据（id, name, version, authors, repository），注册 Tree-sitter 语法仓库（`[grammars.lammps]`）
-- **languages/lammps/config.toml** — 定义语言名称、语法关联、文件后缀（`.in`）、行注释符号（`#`）
-- **languages/lammps/highlights.scm** — Tree-sitter 查询模式，将语法节点映射到高亮类别（`@keyword`, `@string`, `@number`, `@comment` 等）
-- **src/lib.rs** — （可选）Rust 扩展 API，用于下载/管理语法解析器
+## 关键文件职责
 
-## 现有资源
+- **extension.toml** — 扩展元数据（id, name, version, authors, repository, languages），注册 grammar 仓库（`[grammars.lammps]`）
+- **languages/lammps/config.toml** — 语言名称、语法关联、文件后缀 `path_suffixes = ["in"]`（**不带点号**）、行注释 `#`
+- **languages/lammps/highlights.scm** — Tree-sitter 查询模式，将语法节点映射到高亮类别
+- **languages/lammps/brackets.scm** — 括号匹配规则（`@open`/`@close`）
+- **languages/lammps/outline.scm** — 代码大纲规则（`@item`/`@name`/`@context`）
 
-### tree-sitter-lammps (v0.0.8)
+## Grammar
 
-仓库地址: `https://github.com/chappertron/tree-sitter-lammps`（crates.io/documented on docs.rs）
+使用 tree-sitter-lammps v0.0.8，fork 到 `https://github.com/ECHOUniverse/tree-sitter-lammps`（原 `chappertron/tree-sitter-lammps` 仓库已不可访问）。
 
-已完成的语法覆盖：
-- 基础命令结构（`command_name` + `args_under`）
-- `fix`、`compute`、`variable` 特定解析（含 style、ID、group 字段）
-- `shell` 命令、行注释（`#`）、行续接（`&`）
-- 表达式系统：二元/一元运算符、函数调用、括号
-- 变量展开：`${var}`、`$(expr)`、`v_`/`f_`/`c_` 下划线引用
-- 字符串类型：双引号（`"..."`）、单引号原始字符串（`'...'`）、三引号（`"""..."""`）
-- 热力学关键词（`thermo_kwarg`）、原子属性（`atom_property`）、布尔常量
+### 可用节点类型
 
-已有高亮查询（`highlights.scm`）：
-- `@keyword` — fix, compute, variable, command_name, thermo_kwarg, glob
-- `@constant.builtin` — 布尔值
-- `@number` — int, float
-- `@function` — fix_style, compute_style
-- `@property` — variable, fix_id, compute_id
-- `@comment` — comment
-- `@function.builtin` — 函数调用
-- `@string` — string_content, sub_string_content
+语法解析器支持的命名节点：
+`command`, `command_name`, `fix`, `fix_id`, `fix_style`, `compute`, `compute_id`, `compute_style`, `variable`, `variable_def`, `variable_del`, `variable_style`, `shell`, `glob`, `thermo_kwarg`, `atom_property`, `group_id`, `bool`, `int`, `float`, `string_content`, `sub_string_content`, `comment`, `expression`, `binary_op`, `unary_op`, `func`, `identifier`, `args_under`, `argument_list`, `indexing`, `underscore_ident`, `var_curly`, `var_round`, `string`, `raw_string`, `triple_string`, `word`, `parens`
 
-## 开发命令
+### 高亮查询当前映射
+
+| 高亮类别 | 节点类型 |
+|---------|---------|
+| `@keyword` | `fix`, `compute`, `command_name`, `shell`, `thermo_kwarg`, `glob`, `variable_style` |
+| `@constant.builtin` | `bool` |
+| `@number` | `int`, `float` |
+| `@function` | `fix_style`, `compute_style` |
+| `@function.builtin` | `func → identifier` |
+| `@property` | `variable`, `fix_id`, `compute_id` |
+| `@type` | `atom_property`, `group_id` |
+| `@comment` | `comment` |
+| `@string` | `string_content`, `sub_string_content` |
+| `@operator` | anonymous operator tokens |
+
+## 开发调试
 
 ```bash
-# 验证扩展结构
-# 将扩展目录复制/链接到 Zed 扩展目录进行本地测试
-# macOS: ~/Library/Application Support/Zed/extensions/
-ln -s "$(pwd)" ~/Library/Application\ Support/Zed/extensions/lammps
+# 安装 tree-sitter CLI
+npm install -g tree-sitter-cli
 
-# 在 Zed 中打开开发模式查看扩展日志
+# 解析示例文件
+cd /tmp/grammar-work && git clone https://github.com/ECHOUniverse/tree-sitter-lammps.git
+cd tree-sitter-lammps && tree-sitter generate
+tree-sitter parse /path/to/LAMMPS-Zed/examples/input.in
+
+# 测试高亮查询
+tree-sitter query /path/to/LAMMPS-Zed/languages/lammps/highlights.scm /path/to/LAMMPS-Zed/examples/input.in
+
+# Zed 中安装开发扩展
+# Cmd+Shift+P → "zed: install dev extension" → 选择项目目录
+
+# 查看 Zed 日志
 # Cmd+Shift+P → "zed: open log"
-
-# 使用 tree-sitter CLI 测试语法解析（如安装了 tree-sitter CLI）
-tree-sitter parse examples/input.in
-tree-sitter highlight examples/input.in
-
-# Rust 构建（如有 src/lib.rs）
-cargo build --release
+# 或在终端运行: tail -f ~/Library/Logs/Zed/Zed.log | grep -i lammps
 ```
 
-## LAMMPS `.in` 文件语法要点
+## 踩坑记录
 
-- 关键字从最左列开始，全部小写
-- 参数用空格/Tab 分隔
-- `#` 开始一行注释
-- `&` 表示行续接
-- 变量引用：`v_name`（变量）、`f_name`（fix）、`c_name`（compute）、`${name}`、`$(expr)`
-- 命令类别：初始化（units, dimension, boundary, atom_style）、系统定义（read_data, lattice, region）、力场（pair_style, bond_style）、fix/compute、输出（thermo, dump）、控制（if, jump, variable）
+1. **`path_suffixes` 不带点号**：应写 `["in"]` 而非 `[".in"]`。Zed 对后缀的匹配去掉扩展名的点号。
+2. **Grammar 仓库必须可访问**：`extension.toml` 中的 grammar `repository` 必须是 Zed 能 git clone 的 URL。原 `chappertron/tree-sitter-lammps` 已 404，需使用 fork 版本。
+3. **`languages` 字段**：`extension.toml` 需要 `languages = ["languages/lammps"]` 显式注册语言目录。
+4. **Grammar 编译缓存**：切换 grammar 仓库 URL 后，需删除 `grammars/` 目录让 Zed 重新 clone。
+5. **`variable` 节点是标识符不是关键字**：在 highlights.scm 中应作为 `@property` 而非 `@keyword`。
 
 ## 发布扩展
 
 1. 在本地完成开发和测试
 2. Fork `zed-industries/extensions` 仓库
-3. 将本仓库添加为 Git submodule（使用 HTTPS URL）
+3. 将本仓库添加为 Git submodule
 4. 在 `extensions.toml` 中添加新条目
 5. 运行 `pnpm sort-extensions` 排序
 6. 提交 PR 到 `zed-industries/extensions`
@@ -102,6 +109,6 @@ cargo build --release
 
 - 扩展 ID 必须全局唯一，提交后不可更改
 - ID 和名称中不要包含 'zed'、'Zed' 或 'extension'
-- 语言扩展不能捆绑语言服务器，应使用下载或用户环境检查方式
+- 语言扩展不能捆绑语言服务器
 - 提交到 Zed 扩展仓库前，必须完成本地测试
 - 扩展仓库必须公开
