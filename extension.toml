@@ -5,7 +5,8 @@ schema_version = 1
 authors = ["hanxu <eisult@foxmail.com>"]
 description = "LAMMPS molecular dynamics input script (.in) syntax highlighting for Zed"
 repository = "https://github.com/hanxu/LAMMPS-Zed"
+languages = ["languages/lammps"]
 
 [grammars.lammps]
-repository = "https://github.com/chappertron/tree-sitter-lammps"
-rev = "49262c935a44d19857fb141cba06383b1836656f"
+repository = "https://github.com/ECHOUniverse/tree-sitter-lammps"
+rev = "b91533162dd35827315a03150be753886983250e"
