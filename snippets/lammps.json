@@ -128,5 +128,245 @@
     "prefix": "#=",
     "body": ["# ============================================================", "# ${1:section name}", "# ============================================================"],
     "description": "Section header comment"
+  },
+  "Fix NPH": {
+    "prefix": "fix nph",
+    "body": ["fix ${1:ID} ${2:group} nph iso ${3:P_start} ${4:P_stop} ${5:P_damp}"],
+    "description": "NPH ensemble fix"
+  },
+  "Fix deform": {
+    "prefix": "fix deform",
+    "body": ["fix ${1:ID} ${2:group} deform ${3:erate} ${4:style} ${5:dir} ${6:value} units ${7:box}"],
+    "description": "Deformation fix"
+  },
+  "Fix ave/time": {
+    "prefix": "fix ave/time",
+    "body": ["fix ${1:ID} ${2:group} ave/time ${3:Nevery} ${4:Nrepeat} ${5:Nfreq} ${6:value1} ${7:value2}"],
+    "description": "Time-averaged output fix"
+  },
+  "Fix print": {
+    "prefix": "fix print",
+    "body": ["fix ${1:ID} ${2:group} print ${3:interval} \"${4:message}\" file ${5:filename}"],
+    "description": "Print message during simulation"
+  },
+  "Fix setforce": {
+    "prefix": "fix setforce",
+    "body": ["fix ${1:ID} ${2:group} setforce 0.0 0.0 0.0"],
+    "description": "Set forces to zero"
+  },
+  "Fix spring": {
+    "prefix": "fix spring",
+    "body": ["fix ${1:ID} ${2:group} spring tether ${3:K} ${4:x} ${5:y} ${6:z} 0.0"],
+    "description": "Spring tether fix"
+  },
+  "Fix wall/lj126": {
+    "prefix": "fix wall/lj126",
+    "body": ["fix ${1:ID} ${2:group} wall/lj126 ${3:face} ${4:epsilon} ${5:sigma} ${6:cutoff}"],
+    "description": "Lennard-Jones wall fix"
+  },
+  "Fix wall/harmonic": {
+    "prefix": "fix wall/harmonic",
+    "body": ["fix ${1:ID} ${2:group} wall/harmonic ${3:face} ${4:K} ${5:z0}"],
+    "description": "Harmonic wall fix"
+  },
+  "Fix recenter": {
+    "prefix": "fix recenter",
+    "body": ["fix ${1:ID} ${2:group} recenter ${3:x} ${4:y} ${5:z}"],
+    "description": "Recenter coordinates fix"
+  },
+  "Fix momentum": {
+    "prefix": "fix momentum",
+    "body": ["fix ${1:ID} ${2:group} momentum ${3:linear} ${4:angular}"],
+    "description": "Zero momentum fix"
+  },
+  "Pair style lj/cut": {
+    "prefix": "pair_style lj/cut",
+    "body": ["pair_style lj/cut ${1:cutoff}", "pair_coeff * * ${2:epsilon} ${3:sigma} ${4:cutoff}"],
+    "description": "Lennard-Jones cutoff pair style"
+  },
+  "Pair style eam": {
+    "prefix": "pair_style eam",
+    "body": ["pair_style eam", "pair_coeff * * ${1:potential_file} ${2:element}"],
+    "description": "EAM pair style"
+  },
+  "Pair style eam/alloy": {
+    "prefix": "pair_style eam/alloy",
+    "body": ["pair_style eam/alloy", "pair_coeff * * ${1:potential_file} ${2:element1} ${3:element2}"],
+    "description": "EAM alloy pair style"
+  },
+  "Pair style buck": {
+    "prefix": "pair_style buck",
+    "body": ["pair_style buck ${1:cutoff}", "pair_coeff ${2:itype} ${3:jtype} ${4:A} ${5:rho} ${6:C} ${7:cutoff}"],
+    "description": "Buckingham pair style"
+  },
+  "Pair style tersoff": {
+    "prefix": "pair_style tersoff",
+    "body": ["pair_style tersoff", "pair_coeff * * ${1:potential_file} ${2:element1} ${3:element2} ${4:element3}"],
+    "description": "Tersoff pair style"
+  },
+  "Pair style airebo": {
+    "prefix": "pair_style airebo",
+    "body": ["pair_style airebo ${1:cutoff} ${2:LJ} ${3:torsion}", "pair_coeff * * ${1:potential_file}"],
+    "description": "AIREBO pair style"
+  },
+  "Compute reduce": {
+    "prefix": "compute reduce",
+    "body": ["compute ${1:ID} ${2:group} reduce ${3:mode} ${4:value}"],
+    "description": "Reduce compute"
+  },
+  "Compute stress/atom": {
+    "prefix": "compute stress/atom",
+    "body": ["compute ${1:ID} ${2:group} stress/atom"],
+    "description": "Per-atom stress compute"
+  },
+  "Compute centro/atom": {
+    "prefix": "compute centro/atom",
+    "body": ["compute ${1:ID} ${2:group} centro/atom ${3:lattice_type}"],
+    "description": "Centrosymmetry compute"
+  },
+  "Compute msd": {
+    "prefix": "compute msd",
+    "body": ["compute ${1:ID} ${2:group} msd"],
+    "description": "Mean squared displacement compute"
+  },
+  "Compute vacf": {
+    "prefix": "compute vacf",
+    "body": ["compute ${1:ID} ${2:group} vacf"],
+    "description": "Velocity autocorrelation function compute"
+  },
+  "Compute rdf": {
+    "prefix": "compute rdf",
+    "body": ["compute ${1:ID} ${2:group} rdf ${3:Nbin} ${4:itype} ${5:jtype}"],
+    "description": "Radial distribution function compute"
+  },
+  "Compute ke/atom": {
+    "prefix": "compute ke/atom",
+    "body": ["compute ${1:ID} ${2:group} ke/atom"],
+    "description": "Per-atom kinetic energy compute"
+  },
+  "Compute pe/atom": {
+    "prefix": "compute pe/atom",
+    "body": ["compute ${1:ID} ${2:group} pe/atom"],
+    "description": "Per-atom potential energy compute"
+  },
+  "Compute coord/atom": {
+    "prefix": "compute coord/atom",
+    "body": ["compute ${1:ID} ${2:group} coord/atom ${3:cutoff}"],
+    "description": "Coordination number compute"
+  },
+  "Velocity create": {
+    "prefix": "velocity",
+    "body": ["velocity ${1:group} create ${2:temp} ${3:seed}"],
+    "description": "Initialize velocities"
+  },
+  "Minimize": {
+    "prefix": "minimize",
+    "body": ["minimize ${1:etol} ${2:ftol} ${3:maxiter} ${4:maxeval}"],
+    "description": "Energy minimization"
+  },
+  "Group": {
+    "prefix": "group",
+    "body": ["group ${1:ID} ${2:style} ${3:args}"],
+    "description": "Define atom group"
+  },
+  "Neighbor": {
+    "prefix": "neighbor",
+    "body": ["neighbor ${1:skin} bin"],
+    "description": "Set neighbor list parameters"
+  },
+  "Neigh modify": {
+    "prefix": "neigh_modify",
+    "body": ["neigh_modify ${1:every} ${2:delay} ${3:check} ${4:yes}"],
+    "description": "Modify neighbor list settings"
+  },
+  "Reset timestep": {
+    "prefix": "reset_timestep",
+    "body": ["reset_timestep ${1:n}"],
+    "description": "Reset timestep counter"
+  },
+  "Change box": {
+    "prefix": "change_box",
+    "body": ["change_box all ${1:style} ${2:args}"],
+    "description": "Change simulation box"
+  },
+  "Delete atoms": {
+    "prefix": "delete_atoms",
+    "body": ["delete_atoms ${1:style} ${2:args}"],
+    "description": "Delete atoms"
+  },
+  "Replicate": {
+    "prefix": "replicate",
+    "body": ["replicate ${1:nx} ${2:ny} ${3:nz}"],
+    "description": "Replicate simulation cell"
+  },
+  "Write data": {
+    "prefix": "write_data",
+    "body": ["write_data ${1:filename}"],
+    "description": "Write data file"
+  },
+  "Write restart": {
+    "prefix": "write_restart",
+    "body": ["write_restart ${1:filename}"],
+    "description": "Write restart file"
+  },
+  "Read data": {
+    "prefix": "read_data",
+    "body": ["read_data ${1:filename}"],
+    "description": "Read data file"
+  },
+  "Read restart": {
+    "prefix": "read_restart",
+    "body": ["read_restart ${1:filename}"],
+    "description": "Read restart file"
+  },
+  "Units": {
+    "prefix": "units",
+    "body": ["units ${1:metal}"],
+    "description": "Set unit system (metal/real/si/cgs/lj/electron/micro/nano)"
+  },
+  "Boundary": {
+    "prefix": "boundary",
+    "body": ["boundary ${1:p} ${2:p} ${3:p}"],
+    "description": "Set boundary conditions"
+  },
+  "Atom style": {
+    "prefix": "atom_style",
+    "body": ["atom_style ${1:atomic}"],
+    "description": "Set atom style"
+  },
+  "Create box": {
+    "prefix": "create_box",
+    "body": ["create_box ${1:n} ${2:region}"],
+    "description": "Create simulation box"
+  },
+  "Create atoms": {
+    "prefix": "create_atoms",
+    "body": ["create_atoms ${1:type} ${2:region}"],
+    "description": "Create atoms"
+  },
+  "Mass": {
+    "prefix": "mass",
+    "body": ["mass ${1:type} ${2:value}"],
+    "description": "Set atom mass"
+  },
+  "Dump image": {
+    "prefix": "dump image",
+    "body": ["dump ${1:ID} ${2:group} image ${3:interval} ${4:filename} type type size 1024 1024"],
+    "description": "Image dump for visualization"
+  },
+  "Log": {
+    "prefix": "log",
+    "body": ["log ${1:filename}"],
+    "description": "Set log file"
+  },
+  "Restart": {
+    "prefix": "restart",
+    "body": ["restart ${1:interval} ${2:file1} ${3:file2}"],
+    "description": "Write restart files periodically"
+  },
+  "Loop template": {
+    "prefix": "loop",
+    "body": ["variable ${1:i} loop ${2:N}", "label ${3:loop_start}", "${4:...}", "next ${1:i}", "jump SELF ${3:loop_start}"],
+    "description": "Loop template using label and jump"
   }
 }
