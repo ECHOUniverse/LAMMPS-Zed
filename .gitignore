@@ -17,3 +17,11 @@ node_modules/
 
 # Zed grammar build cache
 grammars/
+
+# Claude Code
+CLAUDE.md
+.claude/
+memory/
+
+# Project internal docs
+SPEC.md
