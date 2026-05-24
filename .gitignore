@@ -1,5 +1,6 @@
 # Build output
 /target/
+lsp/target/
 *.wasm
 
 # IDE
@@ -14,6 +15,7 @@
 
 # Dependencies
 node_modules/
+Cargo.lock
 
 # Zed grammar build cache
 grammars/
@@ -23,5 +25,11 @@ CLAUDE.md
 .claude/
 memory/
 
-# Project internal docs
+# Spec documents
 SPEC.md
+SPEC_LSP.md
+
+# Temp/agent files
+*.output
+tasks/
+plans/

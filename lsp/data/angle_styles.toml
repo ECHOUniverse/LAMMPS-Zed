@@ -1,0 +1,39 @@
+[[styles]]
+name = "harmonic"
+category = "Angle"
+since_version = "1995"
+doc_short = "Harmonic angle potential"
+doc_full = "Harmonic angle potential: K*(theta - theta0)^2.\n\n[Documentation](https://docs.lammps.org/angle_harmonic.html)"
+required_args = []
+optional_args = []
+related_commands = ["angle_coeff"]
+
+[[styles]]
+name = "cosine"
+category = "Angle"
+since_version = "2001"
+doc_short = "Cosine angle potential"
+doc_full = "Cosine angle potential: K*(1 + cos(theta)).\n\n[Documentation](https://docs.lammps.org/angle_cosine.html)"
+required_args = []
+optional_args = []
+related_commands = ["angle_coeff"]
+
+[[styles]]
+name = "cosine/periodic"
+category = "Angle"
+since_version = "2005"
+doc_short = "Periodic cosine angle potential"
+doc_full = "Cosine/periodic angle potential: K*(1 - cos(n*(theta - theta0))).\n\n[Documentation](https://docs.lammps.org/angle_cosine_periodic.html)"
+required_args = []
+optional_args = []
+related_commands = ["angle_coeff"]
+
+[[styles]]
+name = "class2"
+category = "Angle"
+since_version = "2003"
+doc_short = "Class 2 angle potential"
+doc_full = "Class 2 angle potential (COMPASS class 2 force field) with cubic and quartic terms.\n\n[Documentation](https://docs.lammps.org/angle_class2.html)"
+required_args = []
+optional_args = []
+related_commands = ["angle_coeff"]

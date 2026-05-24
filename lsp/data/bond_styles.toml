@@ -1,0 +1,39 @@
+[[styles]]
+name = "harmonic"
+category = "Bond"
+since_version = "1995"
+doc_short = "Harmonic bond potential"
+doc_full = "Harmonic bond potential: K*(r - r0)^2.\n\n[Documentation](https://docs.lammps.org/bond_harmonic.html)"
+required_args = []
+optional_args = []
+related_commands = ["bond_coeff"]
+
+[[styles]]
+name = "fene"
+category = "Bond"
+since_version = "2001"
+doc_short = "FENE (finite extensible nonlinear elastic) bond"
+doc_full = "FENE bond potential for coarse-grained polymer models.\n\n[Documentation](https://docs.lammps.org/bond_fene.html)"
+required_args = []
+optional_args = []
+related_commands = ["bond_coeff"]
+
+[[styles]]
+name = "morse"
+category = "Bond"
+since_version = "2003"
+doc_short = "Morse bond potential"
+doc_full = "Morse bond potential: D0*(1 - exp(-alpha*(r - r0)))^2.\n\n[Documentation](https://docs.lammps.org/bond_morse.html)"
+required_args = []
+optional_args = []
+related_commands = ["bond_coeff"]
+
+[[styles]]
+name = "class2"
+category = "Bond"
+since_version = "2003"
+doc_short = "Class 2 bond potential"
+doc_full = "Class 2 bond potential (COMPASS class 2 force field): K2*(r - r0)^2 + K3*(r - r0)^3 + K4*(r - r0)^4.\n\n[Documentation](https://docs.lammps.org/bond_class2.html)"
+required_args = []
+optional_args = []
+related_commands = ["bond_coeff"]

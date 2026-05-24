@@ -1,0 +1,290 @@
+[[styles]]
+name = "nve"
+category = "Fix"
+since_version = "1995"
+doc_short = "Constant NVE time integration"
+doc_full = "Perform constant NVE integration to update position and velocity for atoms in the group each timestep.\n\n[Documentation](https://docs.lammps.org/fix_nve.html)"
+required_args = []
+optional_args = []
+related_commands = ["fix_modify"]
+
+[[styles]]
+name = "nvt"
+category = "Fix"
+since_version = "1995"
+doc_short = "Constant NVT time integration (Nose-Hoover)"
+doc_full = "Perform constant NVT integration using Nose-Hoover thermostat to update position and velocity for atoms in the group each timestep.\n\n[Documentation](https://docs.lammps.org/fix_nh.html)"
+required_args = [
+  { name = "Tstart", param_type = "Float", required = true, doc = "Target temperature at start of run" },
+  { name = "Tstop", param_type = "Float", required = true, doc = "Target temperature at end of run" },
+  { name = "Tdamp", param_type = "Float", required = true, doc = "Temperature damping parameter (time units)" },
+]
+optional_args = []
+related_commands = ["fix_modify"]
+
+[[styles]]
+name = "npt"
+category = "Fix"
+since_version = "1995"
+doc_short = "Constant NPT time integration (Nose-Hoover)"
+doc_full = "Perform constant NPT integration using Nose-Hoover thermostat and barostat to update position and velocity.\n\n[Documentation](https://docs.lammps.org/fix_nh.html)"
+required_args = [
+  { name = "Tstart", param_type = "Float", required = true, doc = "Target temperature at start of run" },
+  { name = "Tstop", param_type = "Float", required = true, doc = "Target temperature at end of run" },
+  { name = "Tdamp", param_type = "Float", required = true, doc = "Temperature damping parameter" },
+  { name = "Pstart", param_type = "Float", required = true, doc = "Target pressure at start" },
+  { name = "Pstop", param_type = "Float", required = true, doc = "Target pressure at end" },
+  { name = "Pdamp", param_type = "Float", required = true, doc = "Pressure damping parameter" },
+]
+optional_args = []
+related_commands = ["fix_modify"]
+
+[[styles]]
+name = "nph"
+category = "Fix"
+since_version = "2001"
+doc_short = "Constant NPH time integration"
+doc_full = "Perform constant NPH integration (constant enthalpy) using Nose-Hoover equations. No thermostat, only barostat.\n\n[Documentation](https://docs.lammps.org/fix_nh.html)"
+required_args = []
+optional_args = []
+related_commands = ["fix_modify"]
+
+[[styles]]
+name = "langevin"
+category = "Fix"
+since_version = "1995"
+doc_short = "Langevin thermostat"
+doc_full = "Apply Langevin dynamics (Brownian dynamics) to a group of atoms using a random force and viscous damping term.\n\n[Documentation](https://docs.lammps.org/fix_langevin.html)"
+required_args = [
+  { name = "Tstart", param_type = "Float", required = true, doc = "Target temperature at start" },
+  { name = "Tstop", param_type = "Float", required = true, doc = "Target temperature at end" },
+  { name = "Tdamp", param_type = "Float", required = true, doc = "Damping parameter" },
+  { name = "seed", param_type = "Integer", required = true, doc = "Random number seed" },
+]
+optional_args = []
+related_commands = ["fix_modify"]
+
+[[styles]]
+name = "deform"
+category = "Fix"
+since_version = "2001"
+doc_short = "Deform the simulation box"
+doc_full = "Change the volume and/or shape of the simulation box during a dynamics run.\n\n[Documentation](https://docs.lammps.org/fix_deform.html)"
+required_args = [
+  { name = "N", param_type = "Integer", required = true, doc = "Perform deformation every N timesteps" },
+]
+optional_args = []
+related_commands = ["fix_modify"]
+
+[[styles]]
+name = "setforce"
+category = "Fix"
+since_version = "1999"
+doc_short = "Set forces on atoms to specified values"
+doc_full = "Set the force components on a group of atoms to specified values. Can be used to freeze atoms or apply constant forces.\n\n[Documentation](https://docs.lammps.org/fix_setforce.html)"
+required_args = [
+  { name = "fx", param_type = "Float", required = true, doc = "Force component in x (or NULL)" },
+  { name = "fy", param_type = "Float", required = true, doc = "Force component in y (or NULL)" },
+  { name = "fz", param_type = "Float", required = true, doc = "Force component in z (or NULL)" },
+]
+optional_args = []
+related_commands = ["fix_modify"]
+
+[[styles]]
+name = "wall/lj126"
+category = "Fix"
+since_version = "2001"
+doc_short = "12-6 LJ wall potential"
+doc_full = "Add a Lennard-Jones 12-6 wall to the simulation for a group of atoms.\n\n[Documentation](https://docs.lammps.org/fix_wall.html)"
+required_args = [
+  { name = "face", param_type = "Enum(['xlo', 'xhi', 'ylo', 'yhi', 'zlo', 'zhi'])", required = true, doc = "Wall face" },
+  { name = "epsilon", param_type = "Float", required = true, doc = "LJ epsilon parameter" },
+  { name = "sigma", param_type = "Float", required = true, doc = "LJ sigma parameter" },
+  { name = "cutoff", param_type = "Float", required = true, doc = "Interaction cutoff" },
+]
+optional_args = []
+related_commands = ["fix_modify"]
+
+[[styles]]
+name = "wall/harmonic"
+category = "Fix"
+since_version = "2001"
+doc_short = "Harmonic wall potential"
+doc_full = "Add a harmonic (spring) wall to the simulation for a group of atoms.\n\n[Documentation](https://docs.lammps.org/fix_wall.html)"
+required_args = [
+  { name = "face", param_type = "Enum(['xlo', 'xhi', 'ylo', 'yhi', 'zlo', 'zhi'])", required = true, doc = "Wall face" },
+  { name = "K", param_type = "Float", required = true, doc = "Spring constant" },
+  { name = "position", param_type = "Float", required = true, doc = "Equilibrium position" },
+]
+optional_args = []
+related_commands = ["fix_modify"]
+
+[[styles]]
+name = "recenter"
+category = "Fix"
+since_version = "2003"
+doc_short = "Recenters the center of mass of a group"
+doc_full = "Periodically recenter the center-of-mass coordinates of a group of atoms to the center of the simulation box.\n\n[Documentation](https://docs.lammps.org/fix_recenter.html)"
+required_args = [
+  { name = "x", param_type = "String", required = true, doc = "X flag (INIT, FINAL, UPDATE, NULL)" },
+  { name = "y", param_type = "String", required = true, doc = "Y flag" },
+  { name = "z", param_type = "String", required = true, doc = "Z flag" },
+]
+optional_args = []
+related_commands = ["fix_modify"]
+
+[[styles]]
+name = "momentum"
+category = "Fix"
+since_version = "2001"
+doc_short = "Zero the linear momentum of atoms"
+doc_full = "Periodically zero the linear momentum of a group of atoms. Useful for removing a net drift.\n\n[Documentation](https://docs.lammps.org/fix_momentum.html)"
+required_args = [
+  { name = "N", param_type = "Integer", required = true, doc = "Apply every N timesteps" },
+]
+optional_args = []
+related_commands = ["fix_modify"]
+
+[[styles]]
+name = "spring"
+category = "Fix"
+since_version = "2001"
+doc_short = "Spring tethering potential"
+doc_full = "Apply a harmonic spring force to tether a group of atoms to a specific position.\n\n[Documentation](https://docs.lammps.org/fix_spring.html)"
+required_args = [
+  { name = "K", param_type = "Float", required = true, doc = "Spring constant" },
+]
+optional_args = []
+related_commands = ["fix_modify"]
+
+[[styles]]
+name = "ave/time"
+category = "Fix"
+since_version = "2005"
+doc_short = "Time-averaged output of quantities"
+doc_full = "Compute time-averaged scalar or vector quantities and output them periodically.\n\n[Documentation](https://docs.lammps.org/fix_ave_time.html)"
+required_args = [
+  { name = "Nevery", param_type = "Integer", required = true, doc = "Sample input values every Nevery timesteps" },
+  { name = "Nrepeat", param_type = "Integer", required = true, doc = "Use Nrepeat values per average" },
+  { name = "Nfreq", param_type = "Integer", required = true, doc = "Output average every Nfreq timesteps" },
+  { name = "values", param_type = "Repeat(String)", required = true, doc = "Input values to average" },
+]
+optional_args = []
+related_commands = ["fix_modify"]
+
+[[styles]]
+name = "ave/spatial"
+category = "Fix"
+since_version = "2005"
+doc_short = "Spatially-averaged output of per-atom quantities"
+doc_full = "Compute spatially averaged per-atom quantities and output them as a function of position.\n\n[Documentation](https://docs.lammps.org/fix_ave_spatial.html)"
+required_args = [
+  { name = "Nevery", param_type = "Integer", required = true, doc = "Sample every N steps" },
+  { name = "Nrepeat", param_type = "Integer", required = true, doc = "Values per average" },
+  { name = "Nfreq", param_type = "Integer", required = true, doc = "Output frequency" },
+  { name = "dim", param_type = "Enum(['x', 'y', 'z'])", required = true, doc = "Dimension to bin in" },
+  { name = "Nbin", param_type = "Integer", required = true, doc = "Number of bins" },
+  { name = "values", param_type = "Repeat(String)", required = true, doc = "Values to average" },
+]
+optional_args = []
+related_commands = ["fix_modify"]
+
+[[styles]]
+name = "ave/atom"
+category = "Fix"
+since_version = "2005"
+doc_short = "Per-atom time-averaged output"
+doc_full = "Compute per-atom time-averaged quantities.\n\n[Documentation](https://docs.lammps.org/fix_ave_atom.html)"
+required_args = [
+  { name = "Nevery", param_type = "Integer", required = true, doc = "Sample every N steps" },
+  { name = "Nrepeat", param_type = "Integer", required = true, doc = "Values per average" },
+  { name = "Nfreq", param_type = "Integer", required = true, doc = "Output frequency" },
+  { name = "values", param_type = "Repeat(String)", required = true, doc = "Values to average" },
+]
+optional_args = []
+related_commands = ["fix_modify"]
+
+[[styles]]
+name = "ave/histo"
+category = "Fix"
+since_version = "2005"
+doc_short = "Histogram-based output of quantities"
+doc_full = "Compute histogram of one or more quantities and output them periodically.\n\n[Documentation](https://docs.lammps.org/fix_ave_histo.html)"
+required_args = [
+  { name = "Nevery", param_type = "Integer", required = true, doc = "Sample every N steps" },
+  { name = "Nrepeat", param_type = "Integer", required = true, doc = "Values per histogram" },
+  { name = "Nfreq", param_type = "Integer", required = true, doc = "Output frequency" },
+  { name = "Nbin", param_type = "Integer", required = true, doc = "Number of bins" },
+  { name = "lo", param_type = "Float", required = true, doc = "Lower bound" },
+  { name = "hi", param_type = "Float", required = true, doc = "Upper bound" },
+  { name = "values", param_type = "Repeat(String)", required = true, doc = "Values to histogram" },
+]
+optional_args = []
+related_commands = ["fix_modify"]
+
+[[styles]]
+name = "ave/correlate"
+category = "Fix"
+since_version = "2005"
+doc_short = "Time-correlation function output"
+doc_full = "Compute time correlation functions of one or more quantities.\n\n[Documentation](https://docs.lammps.org/fix_ave_correlate.html)"
+required_args = [
+  { name = "Nevery", param_type = "Integer", required = true, doc = "Sample every N steps" },
+  { name = "Nrepeat", param_type = "Integer", required = true, doc = "Values per average" },
+  { name = "Nfreq", param_type = "Integer", required = true, doc = "Output frequency" },
+  { name = "values", param_type = "Repeat(String)", required = true, doc = "Values to correlate" },
+]
+optional_args = []
+related_commands = ["fix_modify"]
+
+[[styles]]
+name = "print"
+category = "Fix"
+since_version = "2005"
+doc_short = "Print a string periodically during a run"
+doc_full = "Print a text string to the screen and log file at a given frequency during a dynamics run.\n\n[Documentation](https://docs.lammps.org/fix_print.html)"
+required_args = [
+  { name = "N", param_type = "Integer", required = true, doc = "Print every N timesteps" },
+  { name = "string", param_type = "String", required = true, doc = "Text string to print" },
+]
+optional_args = []
+related_commands = []
+
+[[styles]]
+name = "store/force"
+category = "Fix"
+since_version = "2005"
+doc_short = "Store forces on atoms"
+doc_full = "Store the forces on atoms for later access by other commands.\n\n[Documentation](https://docs.lammps.org/fix_store_force.html)"
+required_args = []
+optional_args = []
+related_commands = []
+
+[[styles]]
+name = "temp/rescale"
+category = "Fix"
+since_version = "2001"
+doc_short = "Temperature rescaling thermostat"
+doc_full = "Simple velocity rescaling thermostat that scales the velocities to match the target temperature.\n\n[Documentation](https://docs.lammps.org/fix_temp_rescale.html)"
+required_args = [
+  { name = "N", param_type = "Integer", required = true, doc = "Rescale every N timesteps" },
+  { name = "Tstart", param_type = "Float", required = true, doc = "Target temperature at start" },
+  { name = "Tstop", param_type = "Float", required = true, doc = "Target temperature at end" },
+  { name = "window", param_type = "Float", required = true, doc = "Temperature window" },
+]
+optional_args = []
+related_commands = ["fix_modify"]
+
+[[styles]]
+name = "temp/berendsen"
+category = "Fix"
+since_version = "2001"
+doc_short = "Berendsen thermostat"
+doc_full = "Berendsen thermostat that rescales velocities to drive the system toward a target temperature.\n\n[Documentation](https://docs.lammps.org/fix_temp_berendsen.html)"
+required_args = [
+  { name = "Tstart", param_type = "Float", required = true, doc = "Target temperature at start" },
+  { name = "Tstop", param_type = "Float", required = true, doc = "Target temperature at end" },
+  { name = "Tdamp", param_type = "Float", required = true, doc = "Temperature damping parameter" },
+]
+optional_args = []
+related_commands = ["fix_modify"]

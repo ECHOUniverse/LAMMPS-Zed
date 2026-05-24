@@ -1,0 +1,29 @@
+[[styles]]
+name = "harmonic"
+category = "Improper"
+since_version = "2001"
+doc_short = "Harmonic improper potential"
+doc_full = "Harmonic improper potential: K*(chi - chi0)^2 for out-of-plane dihedral angles.\n\n[Documentation](https://docs.lammps.org/improper_harmonic.html)"
+required_args = []
+optional_args = []
+related_commands = ["improper_coeff"]
+
+[[styles]]
+name = "cvff"
+category = "Improper"
+since_version = "2001"
+doc_short = "CVFF improper potential"
+doc_full = "CVFF improper potential: K*(1 + d*cos(n*chi)).\n\n[Documentation](https://docs.lammps.org/improper_cvff.html)"
+required_args = []
+optional_args = []
+related_commands = ["improper_coeff"]
+
+[[styles]]
+name = "umbrella"
+category = "Improper"
+since_version = "2005"
+doc_short = "Umbrella (out-of-plane) improper potential"
+doc_full = "Umbrella improper potential for out-of-plane deformation: K/2*(chi - chi0)^2.\n\n[Documentation](https://docs.lammps.org/improper_umbrella.html)"
+required_args = []
+optional_args = []
+related_commands = ["improper_coeff"]

@@ -1,0 +1,851 @@
+[[commands]]
+name = "pair_style"
+category = "Setup"
+doc_short = "Set the formula(s) LAMMPS uses to compute pairwise interactions"
+doc_full = "Set the formula(s) LAMMPS uses to compute pairwise interactions. In LAMMPS, pair potentials are defined between pairs of atoms that are within a cutoff distance. The pair_style command selects which formula(s) to use.\n\n[Documentation](https://docs.lammps.org/pair_style.html)"
+parameters = [
+  { name = "style", param_type = "Style", required = true, doc = "One of the styles from the pair_style list" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments specific to the pair style" },
+]
+
+[[commands]]
+name = "pair_coeff"
+category = "Setup"
+doc_short = "Specify the pairwise force field coefficients"
+doc_full = "Specify the pairwise force field coefficients for one or more pairs of atom types. The number and meaning of the coefficients depends on the pair style.\n\n[Documentation](https://docs.lammps.org/pair_coeff.html)"
+parameters = [
+  { name = "I", param_type = "String", required = true, doc = "Atom type or range (e.g., * or 1*3)" },
+  { name = "J", param_type = "String", required = true, doc = "Atom type or range" },
+  { name = "coeffs", param_type = "Repeat(Float)", required = true, doc = "Coefficients specific to the pair style" },
+]
+
+[[commands]]
+name = "pair_modify"
+category = "Setup"
+doc_short = "Modify parameters of the pair style"
+doc_full = "Modify parameters of the currently defined pair style, such as the mixing rule or table parameters.\n\n[Documentation](https://docs.lammps.org/pair_modify.html)"
+parameters = [
+  { name = "keyword", param_type = "String", required = true, doc = "Parameter keyword to modify" },
+  { name = "values", param_type = "Repeat(String)", required = false, doc = "New value(s) for the parameter" },
+]
+
+[[commands]]
+name = "pair_write"
+category = "Output"
+doc_short = "Write pairwise interaction table"
+doc_full = "Write the pairwise energy and force values to a file as a tabulated potential.\n\n[Documentation](https://docs.lammps.org/pair_write.html)"
+parameters = [
+  { name = "itype", param_type = "Integer", required = true, doc = "Atom type I" },
+  { name = "jtype", param_type = "Integer", required = true, doc = "Atom type J" },
+  { name = "N", param_type = "Integer", required = true, doc = "Number of table entries" },
+  { name = "inner", param_type = "Float", required = true, doc = "Inner cutoff" },
+  { name = "outer", param_type = "Float", required = true, doc = "Outer cutoff" },
+  { name = "file", param_type = "FileName", required = true, doc = "Output file name" },
+]
+
+[[commands]]
+name = "bond_style"
+category = "Setup"
+doc_short = "Set the bond interaction formula(s)"
+doc_full = "Set the formula(s) LAMMPS uses to compute bond interactions between bonded atoms.\n\n[Documentation](https://docs.lammps.org/bond_style.html)"
+parameters = [
+  { name = "style", param_type = "Style", required = true, doc = "One of the styles from the bond_style list" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments specific to the bond style" },
+]
+
+[[commands]]
+name = "bond_coeff"
+category = "Setup"
+doc_short = "Specify bond force field coefficients"
+doc_full = "Specify the bond force field coefficients for one or more bond types.\n\n[Documentation](https://docs.lammps.org/bond_coeff.html)"
+parameters = [
+  { name = "N", param_type = "String", required = true, doc = "Bond type or range" },
+  { name = "coeffs", param_type = "Repeat(Float)", required = true, doc = "Coefficients specific to the bond style" },
+]
+
+[[commands]]
+name = "bond_write"
+category = "Output"
+doc_short = "Write bond interaction to table file"
+doc_full = "Write the bond energy and force values to a file as a tabulated potential.\n\n[Documentation](https://docs.lammps.org/bond_write.html)"
+parameters = [
+  { name = "btype", param_type = "Integer", required = true, doc = "Bond type" },
+  { name = "N", param_type = "Integer", required = true, doc = "Number of table entries" },
+  { name = "inner", param_type = "Float", required = true, doc = "Inner cutoff" },
+  { name = "outer", param_type = "Float", required = true, doc = "Outer cutoff" },
+  { name = "file", param_type = "FileName", required = true, doc = "Output file name" },
+]
+
+[[commands]]
+name = "angle_style"
+category = "Setup"
+doc_short = "Set the angle interaction formula(s)"
+doc_full = "Set the formula(s) LAMMPS uses to compute angle interactions between triplets of bonded atoms.\n\n[Documentation](https://docs.lammps.org/angle_style.html)"
+parameters = [
+  { name = "style", param_type = "Style", required = true, doc = "One of the styles from the angle_style list" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments specific to the angle style" },
+]
+
+[[commands]]
+name = "angle_coeff"
+category = "Setup"
+doc_short = "Specify angle force field coefficients"
+doc_full = "Specify the angle force field coefficients for one or more angle types.\n\n[Documentation](https://docs.lammps.org/angle_coeff.html)"
+parameters = [
+  { name = "N", param_type = "String", required = true, doc = "Angle type or range" },
+  { name = "coeffs", param_type = "Repeat(Float)", required = true, doc = "Coefficients specific to the angle style" },
+]
+
+[[commands]]
+name = "angle_write"
+category = "Output"
+doc_short = "Write angle interaction to table file"
+doc_full = "Write the angle energy and force values to a file as a tabulated potential.\n\n[Documentation](https://docs.lammps.org/angle_write.html)"
+parameters = [
+  { name = "atype", param_type = "Integer", required = true, doc = "Angle type" },
+  { name = "N", param_type = "Integer", required = true, doc = "Number of table entries" },
+  { name = "inner", param_type = "Float", required = true, doc = "Inner bound" },
+  { name = "outer", param_type = "Float", required = true, doc = "Outer bound" },
+  { name = "file", param_type = "FileName", required = true, doc = "Output file name" },
+]
+
+[[commands]]
+name = "dihedral_style"
+category = "Setup"
+doc_short = "Set the dihedral interaction formula(s)"
+doc_full = "Set the formula(s) LAMMPS uses to compute dihedral interactions between quadruplets of bonded atoms.\n\n[Documentation](https://docs.lammps.org/dihedral_style.html)"
+parameters = [
+  { name = "style", param_type = "Style", required = true, doc = "One of the styles from the dihedral_style list" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments specific to the dihedral style" },
+]
+
+[[commands]]
+name = "dihedral_coeff"
+category = "Setup"
+doc_short = "Specify dihedral force field coefficients"
+doc_full = "Specify the dihedral force field coefficients for one or more dihedral types.\n\n[Documentation](https://docs.lammps.org/dihedral_coeff.html)"
+parameters = [
+  { name = "N", param_type = "String", required = true, doc = "Dihedral type or range" },
+  { name = "coeffs", param_type = "Repeat(Float)", required = true, doc = "Coefficients specific to the dihedral style" },
+]
+
+[[commands]]
+name = "dihedral_write"
+category = "Output"
+doc_short = "Write dihedral interaction to table file"
+doc_full = "Write the dihedral energy and force values to a file as a tabulated potential.\n\n[Documentation](https://docs.lammps.org/dihedral_write.html)"
+parameters = [
+  { name = "dtype", param_type = "Integer", required = true, doc = "Dihedral type" },
+  { name = "N", param_type = "Integer", required = true, doc = "Number of table entries" },
+  { name = "inner", param_type = "Float", required = true, doc = "Inner bound" },
+  { name = "outer", param_type = "Float", required = true, doc = "Outer bound" },
+  { name = "file", param_type = "FileName", required = true, doc = "Output file name" },
+]
+
+[[commands]]
+name = "improper_style"
+category = "Setup"
+doc_short = "Set the improper interaction formula(s)"
+doc_full = "Set the formula(s) LAMMPS uses to compute improper interactions between quadruplets of bonded atoms for out-of-plane or all-atom improper styles.\n\n[Documentation](https://docs.lammps.org/improper_style.html)"
+parameters = [
+  { name = "style", param_type = "Style", required = true, doc = "One of the styles from the improper_style list" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments specific to the improper style" },
+]
+
+[[commands]]
+name = "improper_coeff"
+category = "Setup"
+doc_short = "Specify improper force field coefficients"
+doc_full = "Specify the improper force field coefficients for one or more improper types.\n\n[Documentation](https://docs.lammps.org/improper_coeff.html)"
+parameters = [
+  { name = "N", param_type = "String", required = true, doc = "Improper type or range" },
+  { name = "coeffs", param_type = "Repeat(Float)", required = true, doc = "Coefficients specific to the improper style" },
+]
+
+[[commands]]
+name = "kspace_style"
+category = "Setup"
+doc_short = "Set the long-range solver for Coulombic interactions"
+doc_full = "Define a long-range Coulombic solver to be used with charge-aware pair styles.\n\n[Documentation](https://docs.lammps.org/kspace_style.html)"
+parameters = [
+  { name = "style", param_type = "Style", required = true, doc = "Kspace solver style" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments specific to the kspace style" },
+]
+
+[[commands]]
+name = "kspace_modify"
+category = "Setup"
+doc_short = "Modify parameters of the kspace solver"
+doc_full = "Modify parameters of the currently defined kspace style.\n\n[Documentation](https://docs.lammps.org/kspace_modify.html)"
+parameters = [
+  { name = "keyword", param_type = "String", required = true, doc = "Parameter keyword to modify" },
+  { name = "values", param_type = "Repeat(String)", required = false, doc = "New value(s) for the parameter" },
+]
+
+[[commands]]
+name = "special_bonds"
+category = "Setup"
+doc_short = "Set weighting coefficients for special bonds"
+doc_full = "Set the weighting coefficients for 1-2, 1-3, 1-4 and other special bonds for pairwise and Coulombic interactions.\n\n[Documentation](https://docs.lammps.org/special_bonds.html)"
+parameters = [
+  { name = "keyword", param_type = "String", required = true, doc = "Interaction type keyword (lj, coul, angle, dihedral)" },
+  { name = "weights", param_type = "Repeat(Float)", required = true, doc = "Weighting factors for special bonds" },
+]
+
+[[commands]]
+name = "fix"
+category = "Simulation"
+doc_short = "Apply a fix to a group of atoms"
+doc_full = "Set a fix that will be applied to a group of atoms. In LAMMPS, a 'fix' is any operation that is applied to the system during timestepping or minimization. Fixes include time integration, force constraints, boundary conditions, diagnostics, and more.\n\n[Documentation](https://docs.lammps.org/fix.html)"
+parameters = [
+  { name = "ID", param_type = "FixId", required = true, doc = "User-assigned name for the fix" },
+  { name = "group-ID", param_type = "GroupId", required = true, doc = "ID of the group the fix will be applied to" },
+  { name = "style", param_type = "Style", required = true, doc = "One of the styles from the fix list" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments specific to the fix style" },
+]
+
+[[commands]]
+name = "unfix"
+category = "Simulation"
+doc_short = "Remove a previously defined fix"
+doc_full = "Delete a fix that was previously defined with the fix command. The fix is removed from the system.\n\n[Documentation](https://docs.lammps.org/unfix.html)"
+parameters = [
+  { name = "ID", param_type = "FixId", required = true, doc = "ID of a previously defined fix" },
+]
+
+[[commands]]
+name = "fix_modify"
+category = "Simulation"
+doc_short = "Modify parameters of a previously defined fix"
+doc_full = "Modify one or more parameters of a previously defined fix. Not all fix styles support all parameters.\n\n[Documentation](https://docs.lammps.org/fix_modify.html)"
+parameters = [
+  { name = "ID", param_type = "FixId", required = true, doc = "ID of the fix to modify" },
+  { name = "keyword", param_type = "String", required = true, doc = "Parameter keyword to modify" },
+  { name = "values", param_type = "Repeat(String)", required = false, doc = "New value(s) for the parameter" },
+]
+
+[[commands]]
+name = "compute"
+category = "Simulation"
+doc_short = "Define a computation that will be performed"
+doc_full = "Define a computation that will be performed on a group of atoms. Computes calculate quantities like temperature, pressure, potential energy, etc. that can be output or used by other commands.\n\n[Documentation](https://docs.lammps.org/compute.html)"
+parameters = [
+  { name = "ID", param_type = "ComputeId", required = true, doc = "User-assigned name for the compute" },
+  { name = "group-ID", param_type = "GroupId", required = true, doc = "ID of the group to perform computation on" },
+  { name = "style", param_type = "Style", required = true, doc = "One of the styles from the compute list" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments specific to the compute style" },
+]
+
+[[commands]]
+name = "uncompute"
+category = "Simulation"
+doc_short = "Remove a previously defined compute"
+doc_full = "Delete a compute that was previously defined with the compute command.\n\n[Documentation](https://docs.lammps.org/uncompute.html)"
+parameters = [
+  { name = "ID", param_type = "ComputeId", required = true, doc = "ID of a previously defined compute" },
+]
+
+[[commands]]
+name = "compute_modify"
+category = "Simulation"
+doc_short = "Modify parameters of a previously defined compute"
+doc_full = "Modify one or more parameters of a previously defined compute.\n\n[Documentation](https://docs.lammps.org/compute_modify.html)"
+parameters = [
+  { name = "ID", param_type = "ComputeId", required = true, doc = "ID of the compute to modify" },
+  { name = "keyword", param_type = "String", required = true, doc = "Parameter keyword to modify" },
+  { name = "values", param_type = "Repeat(String)", required = false, doc = "New value(s) for the parameter" },
+]
+
+[[commands]]
+name = "variable"
+category = "Control"
+doc_short = "Assign a value to a variable"
+doc_full = "Define a variable that can be used in input script commands or evaluated during a run. Variables come in many styles: equal, atom, string, index, loop, universe, uloop, world, file, atomfile, format, getenv, timer, python, internal, and delete.\n\n[Documentation](https://docs.lammps.org/variable.html)"
+parameters = [
+  { name = "name", param_type = "VariableName", required = true, doc = "Name of the variable" },
+  { name = "style", param_type = "Enum(['delete', 'equal', 'atom', 'string', 'index', 'loop', 'universe', 'uloop', 'world', 'file', 'atomfile', 'format', 'getenv', 'timer', 'python', 'internal', 'vector'])", required = true, doc = "Style of the variable" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments for the variable style" },
+]
+
+[[commands]]
+name = "thermo"
+category = "Output"
+doc_short = "Compute and print thermodynamic info periodically"
+doc_full = "Compute and print thermodynamic info (e.g., temperature, energy, pressure) at the given frequency during a simulation run.\n\n[Documentation](https://docs.lammps.org/thermo.html)"
+parameters = [
+  { name = "N", param_type = "Integer", required = true, doc = "Output thermodynamic data every N timesteps" },
+]
+
+[[commands]]
+name = "thermo_style"
+category = "Output"
+doc_short = "Style and content for thermodynamic output"
+doc_full = "Set the style and content for printing thermodynamic data to the screen and log file.\n\n[Documentation](https://docs.lammps.org/thermo_style.html)"
+parameters = [
+  { name = "style", param_type = "Enum(['one', 'multi', 'custom'])", required = true, doc = "Output style: one, multi, or custom" },
+  { name = "keywords", param_type = "Repeat(String)", required = false, doc = "Specific keywords to output (for custom style)" },
+]
+
+[[commands]]
+name = "thermo_modify"
+category = "Output"
+doc_short = "Modify thermodynamic output parameters"
+doc_full = "Modify parameters of thermodynamic output, such as format, normalization, or which compute provides the temperature.\n\n[Documentation](https://docs.lammps.org/thermo_modify.html)"
+parameters = [
+  { name = "keyword", param_type = "String", required = true, doc = "Parameter keyword to modify" },
+  { name = "values", param_type = "Repeat(String)", required = false, doc = "New value(s) for the parameter" },
+]
+
+[[commands]]
+name = "dump"
+category = "Output"
+doc_short = "Output atom snapshots to a file"
+doc_full = "Dump atom information to one or more files at specified timesteps. Multiple dump commands can be defined with different styles and output frequencies.\n\n[Documentation](https://docs.lammps.org/dump.html)"
+parameters = [
+  { name = "ID", param_type = "String", required = true, doc = "User-assigned name for the dump" },
+  { name = "group-ID", param_type = "GroupId", required = true, doc = "ID of the group to dump atoms from" },
+  { name = "style", param_type = "Style", required = true, doc = "Style of dump (atom, custom, xyz, cfg, local, image, movie, netcdf, molfile, vtk)" },
+  { name = "N", param_type = "Integer", required = true, doc = "Dump every N timesteps" },
+  { name = "file", param_type = "FileName", required = true, doc = "Name of file to write dump to" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments specific to the dump style" },
+]
+
+[[commands]]
+name = "dump_modify"
+category = "Output"
+doc_short = "Modify parameters of a previously defined dump"
+doc_full = "Modify the parameters of a previously defined dump command.\n\n[Documentation](https://docs.lammps.org/dump_modify.html)"
+parameters = [
+  { name = "ID", param_type = "String", required = true, doc = "ID of the dump to modify" },
+  { name = "keyword", param_type = "String", required = true, doc = "Parameter keyword to modify" },
+  { name = "values", param_type = "Repeat(String)", required = false, doc = "New value(s) for the parameter" },
+]
+
+[[commands]]
+name = "undump"
+category = "Output"
+doc_short = "Remove a previously defined dump"
+doc_full = "Turn off a previously defined dump.\n\n[Documentation](https://docs.lammps.org/undump.html)"
+parameters = [
+  { name = "ID", param_type = "String", required = true, doc = "ID of a previously defined dump" },
+]
+
+[[commands]]
+name = "write_dump"
+category = "Output"
+doc_short = "Write a single dump snapshot"
+doc_full = "Write a single snapshot of atom information in the requested dump style to a file.\n\n[Documentation](https://docs.lammps.org/write_dump.html)"
+parameters = [
+  { name = "group-ID", param_type = "GroupId", required = true, doc = "Group to dump atoms from" },
+  { name = "style", param_type = "Style", required = true, doc = "Dump style" },
+  { name = "file", param_type = "FileName", required = true, doc = "Output file name" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Additional arguments" },
+]
+
+[[commands]]
+name = "write_coeff"
+category = "Output"
+doc_short = "Write force field coefficients to a file"
+doc_full = "Write force field coefficients to a text file in a LAMMPS-readable format.\n\n[Documentation](https://docs.lammps.org/write_coeff.html)"
+parameters = [
+  { name = "file", param_type = "FileName", required = true, doc = "Output file name" },
+]
+
+[[commands]]
+name = "run"
+category = "Simulation"
+doc_short = "Run a simulation for N timesteps"
+doc_full = "Run or continue dynamics for a specified number of timesteps.\n\n[Documentation](https://docs.lammps.org/run.html)"
+parameters = [
+  { name = "N", param_type = "Integer", required = true, doc = "Number of timesteps to run" },
+  { name = "keyword", param_type = "String", required = false, doc = "Optional keyword (pre, post)" },
+  { name = "values", param_type = "Repeat(String)", required = false, doc = "Values for the keyword" },
+]
+
+[[commands]]
+name = "run_style"
+category = "Simulation"
+doc_short = "Set the style for rRESPA multi-timescale integration"
+doc_full = "Select the rRESPA multi-timescale integration style for use with the run command.\n\n[Documentation](https://docs.lammps.org/run_style.html)"
+parameters = [
+  { name = "style", param_type = "Style", required = true, doc = "Run style" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments specific to the run style" },
+]
+
+[[commands]]
+name = "minimize"
+category = "Simulation"
+doc_short = "Perform energy minimization"
+doc_full = "Perform an energy minimization of the system by iteratively adjusting atom coordinates.\n\n[Documentation](https://docs.lammps.org/minimize.html)"
+parameters = [
+  { name = "etol", param_type = "Float", required = true, doc = "Stopping tolerance for energy" },
+  { name = "ftol", param_type = "Float", required = true, doc = "Stopping tolerance for force" },
+  { name = "maxiter", param_type = "Integer", required = true, doc = "Max iterations of minimizer" },
+  { name = "maxeval", param_type = "Integer", required = true, doc = "Max number of force/energy evaluations" },
+]
+
+[[commands]]
+name = "min_style"
+category = "Simulation"
+doc_short = "Select the minimization algorithm"
+doc_full = "Select the energy minimization algorithm to be used by the minimize command.\n\n[Documentation](https://docs.lammps.org/min_style.html)"
+parameters = [
+  { name = "style", param_type = "Style", required = true, doc = "Minimization algorithm style" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments specific to the style" },
+]
+
+[[commands]]
+name = "min_modify"
+category = "Simulation"
+doc_short = "Modify minimization algorithm parameters"
+doc_full = "Modify parameters of the minimization algorithm selected by min_style.\n\n[Documentation](https://docs.lammps.org/min_modify.html)"
+parameters = [
+  { name = "keyword", param_type = "String", required = true, doc = "Parameter keyword" },
+  { name = "values", param_type = "Repeat(String)", required = false, doc = "Value(s) for the keyword" },
+]
+
+[[commands]]
+name = "comm_modify"
+category = "Setup"
+doc_short = "Modify communication parameters"
+doc_full = "Set parameters that affect how LAMMPS communicates ghost atom information between processors.\n\n[Documentation](https://docs.lammps.org/comm_modify.html)"
+parameters = [
+  { name = "keyword", param_type = "String", required = true, doc = "Parameter keyword" },
+  { name = "values", param_type = "Repeat(String)", required = false, doc = "Value(s)" },
+]
+
+[[commands]]
+name = "comm_style"
+category = "Setup"
+doc_short = "Set the style of communication"
+doc_full = "Select the style of inter-processor atom communication.\n\n[Documentation](https://docs.lammps.org/comm_style.html)"
+parameters = [
+  { name = "style", param_type = "Style", required = true, doc = "Communication style" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments" },
+]
+
+[[commands]]
+name = "newton"
+category = "Setup"
+doc_short = "Set Newton's third law enforcement"
+doc_full = "Turn Newton's third law on or off for pairwise and bonded interactions.\n\n[Documentation](https://docs.lammps.org/newton.html)"
+parameters = [
+  { name = "flag", param_type = "Enum(['on', 'off'])", required = true, doc = "Enable or disable Newton's third law" },
+]
+
+[[commands]]
+name = "processors"
+category = "Setup"
+doc_short = "Specify the 3D processor grid"
+doc_full = "Specify how processors are mapped to the 3D simulation box as a Px by Py by Pz grid.\n\n[Documentation](https://docs.lammps.org/processors.html)"
+parameters = [
+  { name = "Px", param_type = "Integer", required = true, doc = "Processors in x dimension" },
+  { name = "Py", param_type = "Integer", required = true, doc = "Processors in y dimension" },
+  { name = "Pz", param_type = "Integer", required = true, doc = "Processors in z dimension" },
+]
+
+[[commands]]
+name = "package"
+category = "Setup"
+doc_short = "Configure a LAMMPS package"
+doc_full = "Invoke package-specific settings for a LAMMPS package.\n\n[Documentation](https://docs.lammps.org/package.html)"
+parameters = [
+  { name = "style", param_type = "Style", required = true, doc = "Package style" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Package-specific arguments" },
+]
+
+[[commands]]
+name = "suffix"
+category = "Setup"
+doc_short = "Enable GPU/INTEL/KOKKOS acceleration suffix"
+doc_full = "Enable or disable the use of accelerated pair, fix, compute, kspace styles with optimised suffixes.\n\n[Documentation](https://docs.lammps.org/suffix.html)"
+parameters = [
+  { name = "style", param_type = "Enum(['off', 'on', 'opt', 'gpu', 'intel', 'kk', 'omp'])", required = true, doc = "Suffix style" },
+]
+
+[[commands]]
+name = "timestep"
+category = "Setup"
+doc_short = "Set the timestep size for simulations"
+doc_full = "Set the timestep size for subsequent simulations.\n\n[Documentation](https://docs.lammps.org/timestep.html)"
+parameters = [
+  { name = "dt", param_type = "Float", required = true, doc = "Timestep size (time units)" },
+]
+
+[[commands]]
+name = "units"
+category = "Setup"
+doc_short = "Define the units used in the simulation"
+doc_full = "Set the units used for input and output in the simulation. This determines the meaning of distance, time, energy, etc.\n\n[Documentation](https://docs.lammps.org/units.html)"
+parameters = [
+  { name = "style", param_type = "Enum(['lj', 'real', 'metal', 'si', 'cgs', 'electron', 'micro', 'nano'])", required = true, doc = "Unit style" },
+]
+
+[[commands]]
+name = "dimension"
+category = "Setup"
+doc_short = "Set the dimensionality of the simulation"
+doc_full = "Set the dimensionality of the simulation: 2d or 3d.\n\n[Documentation](https://docs.lammps.org/dimension.html)"
+parameters = [
+  { name = "N", param_type = "Enum(['2', '3'])", required = true, doc = "2 or 3 dimensions" },
+]
+
+[[commands]]
+name = "boundary"
+category = "Setup"
+doc_short = "Set the boundary conditions"
+doc_full = "Set the style of boundary conditions for the global simulation box in each dimension: p (periodic), f (fixed), s (shrink-wrapped), or m (shrink-wrapped with minimum value).\n\n[Documentation](https://docs.lammps.org/boundary.html)"
+parameters = [
+  { name = "x", param_type = "Enum(['p', 'f', 's', 'm'])", required = true, doc = "Boundary condition in x direction" },
+  { name = "y", param_type = "Enum(['p', 'f', 's', 'm'])", required = true, doc = "Boundary condition in y direction" },
+  { name = "z", param_type = "Enum(['p', 'f', 's', 'm'])", required = true, doc = "Boundary condition in z direction" },
+]
+
+[[commands]]
+name = "atom_style"
+category = "Setup"
+doc_short = "Define which per-atom attributes are stored"
+doc_full = "Define what attributes are associated with each atom. This determines what data is stored, communicated, and output.\n\n[Documentation](https://docs.lammps.org/atom_style.html)"
+parameters = [
+  { name = "style", param_type = "Enum(['atomic', 'charge', 'sphere', 'ellipsoid', 'full', 'molecular', 'body', 'line', 'tri', 'template', 'hybrid'])", required = true, doc = "Atom style" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments for hybrid style" },
+]
+
+[[commands]]
+name = "atom_modify"
+category = "Setup"
+doc_short = "Modify per-atom attributes"
+doc_full = "Modify certain per-atom properties.\n\n[Documentation](https://docs.lammps.org/atom_modify.html)"
+parameters = [
+  { name = "keyword", param_type = "String", required = true, doc = "Property keyword" },
+  { name = "values", param_type = "Repeat(String)", required = false, doc = "Value(s)" },
+]
+
+[[commands]]
+name = "lattice"
+category = "Setup"
+doc_short = "Define a crystal lattice"
+doc_full = "Define a crystal lattice for use by other commands like create_atoms.\n\n[Documentation](https://docs.lammps.org/lattice.html)"
+parameters = [
+  { name = "style", param_type = "Enum(['none', 'sc', 'bcc', 'fcc', 'hcp', 'diamond', 'zincblende', 'rocksalt', 'cesiumchloride', 'fluorite', 'perovskite', 'custom'])", required = true, doc = "Lattice style" },
+  { name = "scale", param_type = "Float", required = true, doc = "Lattice constant (distance units)" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Additional arguments" },
+]
+
+[[commands]]
+name = "region"
+category = "Setup"
+doc_short = "Define a geometric region"
+doc_full = "Define a geometric region of space. Regions can be used to create atoms, apply fixes, select groups, etc.\n\n[Documentation](https://docs.lammps.org/region.html)"
+parameters = [
+  { name = "ID", param_type = "String", required = true, doc = "User-assigned name" },
+  { name = "style", param_type = "Enum(['block', 'cone', 'cylinder', 'prism', 'sphere', 'union', 'intersect'])", required = true, doc = "Region style" },
+  { name = "args", param_type = "Repeat(String)", required = true, doc = "Geometric parameters" },
+]
+
+[[commands]]
+name = "create_box"
+category = "Setup"
+doc_short = "Create a simulation box"
+doc_full = "Create a simulation box based on the previously defined lattice and region.\n\n[Documentation](https://docs.lammps.org/create_box.html)"
+parameters = [
+  { name = "N", param_type = "Integer", required = true, doc = "Number of atom types" },
+  { name = "region-ID", param_type = "String", required = true, doc = "ID of region to use for box" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Optional keyword/value pairs" },
+]
+
+[[commands]]
+name = "create_atoms"
+category = "Setup"
+doc_short = "Create atoms on a lattice"
+doc_full = "Create atoms on a lattice, or on a subset of lattice sites, within the simulation box.\n\n[Documentation](https://docs.lammps.org/create_atoms.html)"
+parameters = [
+  { name = "type", param_type = "Integer", required = true, doc = "Atom type" },
+  { name = "style", param_type = "Enum(['box', 'region', 'single', 'random'])", required = true, doc = "Creation style" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments for creation style" },
+]
+
+[[commands]]
+name = "delete_atoms"
+category = "Setup"
+doc_short = "Delete atoms from the system"
+doc_full = "Delete atoms from the system that match certain criteria.\n\n[Documentation](https://docs.lammps.org/delete_atoms.html)"
+parameters = [
+  { name = "style", param_type = "Enum(['group', 'region', 'overlap', 'porosity'])", required = true, doc = "Deletion style" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments for deletion style" },
+]
+
+[[commands]]
+name = "displace_atoms"
+category = "Setup"
+doc_short = "Displace a group of atoms"
+doc_full = "Displace a group of atoms by a specified vector.\n\n[Documentation](https://docs.lammps.org/displace_atoms.html)"
+parameters = [
+  { name = "group-ID", param_type = "GroupId", required = true, doc = "ID of the group to displace" },
+  { name = "dx", param_type = "Float", required = true, doc = "Displacement in x" },
+  { name = "dy", param_type = "Float", required = true, doc = "Displacement in y" },
+  { name = "dz", param_type = "Float", required = true, doc = "Displacement in z" },
+]
+
+[[commands]]
+name = "set"
+category = "Setup"
+doc_short = "Set atom attributes"
+doc_full = "Set one or more properties of one or more atoms.\n\n[Documentation](https://docs.lammps.org/set.html)"
+parameters = [
+  { name = "style", param_type = "Style", required = true, doc = "Selection style (type, group, region)" },
+  { name = "args", param_type = "Repeat(String)", required = true, doc = "Selection arguments and attribute assignments" },
+]
+
+[[commands]]
+name = "mass"
+category = "Setup"
+doc_short = "Set atom type masses"
+doc_full = "Set the mass for one or more atom types.\n\n[Documentation](https://docs.lammps.org/mass.html)"
+parameters = [
+  { name = "I", param_type = "String", required = true, doc = "Atom type or range" },
+  { name = "value", param_type = "Float", required = true, doc = "Mass value" },
+]
+
+[[commands]]
+name = "velocity"
+category = "Setup"
+doc_short = "Set atom velocities"
+doc_full = "Set or change the velocities of a group of atoms.\n\n[Documentation](https://docs.lammps.org/velocity.html)"
+parameters = [
+  { name = "group-ID", param_type = "GroupId", required = true, doc = "Group to set velocities for" },
+  { name = "style", param_type = "Enum(['create', 'set', 'scale', 'ramp', 'zero'])", required = true, doc = "Velocity style" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments for velocity style" },
+]
+
+[[commands]]
+name = "group"
+category = "Setup"
+doc_short = "Define a group of atoms"
+doc_full = "Identify a collection of atoms as belonging to a group. Groups are used by many other commands.\n\n[Documentation](https://docs.lammps.org/group.html)"
+parameters = [
+  { name = "ID", param_type = "GroupId", required = true, doc = "User-assigned group name" },
+  { name = "style", param_type = "Enum(['delete', 'clear', 'type', 'id', 'region', 'variable', 'dynamic'])", required = true, doc = "Group style" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments for group style" },
+]
+
+[[commands]]
+name = "neighbor"
+category = "Setup"
+doc_short = "Set neighbor list construction parameters"
+doc_full = "Set parameters that affect the building of pairwise neighbor lists.\n\n[Documentation](https://docs.lammps.org/neighbor.html)"
+parameters = [
+  { name = "skin", param_type = "Float", required = true, doc = "Extra distance beyond force cutoff for neighbor list" },
+  { name = "style", param_type = "Enum(['bin', 'nsq', 'multi'])", required = false, doc = "Neighbor list style" },
+]
+
+[[commands]]
+name = "neigh_modify"
+category = "Setup"
+doc_short = "Modify neighbor list parameters"
+doc_full = "Set parameters that control how neighbor lists are built and used.\n\n[Documentation](https://docs.lammps.org/neigh_modify.html)"
+parameters = [
+  { name = "keyword", param_type = "String", required = true, doc = "Parameter keyword" },
+  { name = "values", param_type = "Repeat(String)", required = false, doc = "Value(s)" },
+]
+
+[[commands]]
+name = "change_box"
+category = "Setup"
+doc_short = "Change the simulation box size/shape"
+doc_full = "Change the volume and/or shape of the simulation box.\n\n[Documentation](https://docs.lammps.org/change_box.html)"
+parameters = [
+  { name = "keyword", param_type = "String", required = true, doc = "Operation keyword" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments" },
+]
+
+[[commands]]
+name = "read_data"
+category = "Input"
+doc_short = "Read a data file containing atom info"
+doc_full = "Read a data file containing atom coordinates, topology, and other information.\n\n[Documentation](https://docs.lammps.org/read_data.html)"
+parameters = [
+  { name = "file", param_type = "FileName", required = true, doc = "Name of data file to read" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Optional keyword/value pairs" },
+]
+
+[[commands]]
+name = "read_restart"
+category = "Input"
+doc_short = "Read a restart file"
+doc_full = "Read a binary restart file to continue a previous simulation.\n\n[Documentation](https://docs.lammps.org/read_restart.html)"
+parameters = [
+  { name = "file", param_type = "FileName", required = true, doc = "Name of restart file" },
+]
+
+[[commands]]
+name = "read_dump"
+category = "Input"
+doc_short = "Read atom snapshots from a dump file"
+doc_full = "Read atom information from a dump file to overwrite the current atom configuration.\n\n[Documentation](https://docs.lammps.org/read_dump.html)"
+parameters = [
+  { name = "file", param_type = "FileName", required = true, doc = "Name of dump file to read" },
+  { name = "N", param_type = "Integer", required = true, doc = "Timestep to read from dump file" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Optional argument/value pairs" },
+]
+
+[[commands]]
+name = "write_data"
+category = "Output"
+doc_short = "Write a data file"
+doc_full = "Write a data file containing current atom coordinates and topology.\n\n[Documentation](https://docs.lammps.org/write_data.html)"
+parameters = [
+  { name = "file", param_type = "FileName", required = true, doc = "Name of file to write" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Optional keyword/value pairs" },
+]
+
+[[commands]]
+name = "write_restart"
+category = "Output"
+doc_short = "Write a binary restart file"
+doc_full = "Write a binary restart file of the current simulation state.\n\n[Documentation](https://docs.lammps.org/write_restart.html)"
+parameters = [
+  { name = "file", param_type = "FileName", required = true, doc = "Name of restart file to write" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Optional keywords" },
+]
+
+[[commands]]
+name = "include"
+category = "Input"
+doc_short = "Include commands from an external file"
+doc_full = "Insert commands from an external file into the input script. The included file is processed immediately, then LAMMPS returns to processing the original file.\n\n[Documentation](https://docs.lammps.org/include.html)"
+parameters = [
+  { name = "file", param_type = "FileName", required = true, doc = "Name of file to include" },
+]
+
+[[commands]]
+name = "jump"
+category = "Control"
+doc_short = "Jump to a label or file"
+doc_full = "Transfer control to another part of the input script or to another file. Can be used for looping and conditional execution.\n\n[Documentation](https://docs.lammps.org/jump.html)"
+parameters = [
+  { name = "file", param_type = "FileName", required = true, doc = "File containing the label (SELF for current file)" },
+  { name = "label", param_type = "Label", required = true, doc = "Label to jump to" },
+]
+
+[[commands]]
+name = "label"
+category = "Control"
+doc_short = "Define a jump target label"
+doc_full = "Define a label that can be used as a target for the jump command.\n\n[Documentation](https://docs.lammps.org/label.html)"
+parameters = [
+  { name = "name", param_type = "Label", required = true, doc = "Label name" },
+]
+
+[[commands]]
+name = "next"
+category = "Control"
+doc_short = "Advance a loop variable"
+doc_full = "Increment a loop variable and jump to a label if the variable is within bounds.\n\n[Documentation](https://docs.lammps.org/next.html)"
+parameters = [
+  { name = "variable", param_type = "Variable", required = true, doc = "Variable name to increment" },
+]
+
+[[commands]]
+name = "if"
+category = "Control"
+doc_short = "Conditionally execute a command"
+doc_full = "Conditionally execute a command based on a Boolean expression.\n\n[Documentation](https://docs.lammps.org/if.html)"
+parameters = [
+  { name = "condition", param_type = "Expression", required = true, doc = "Boolean expression" },
+  { name = "then", param_type = "Keyword('then')", required = true, doc = "Required keyword" },
+  { name = "command", param_type = "String", required = true, doc = "Command to execute if condition is true" },
+]
+
+[[commands]]
+name = "shell"
+category = "Control"
+doc_short = "Execute a shell command"
+doc_full = "Execute a shell command during the simulation.\n\n[Documentation](https://docs.lammps.org/shell.html)"
+parameters = [
+  { name = "command", param_type = "String", required = true, doc = "Shell command to execute" },
+]
+
+[[commands]]
+name = "print"
+category = "Control"
+doc_short = "Print a text string to the screen and log file"
+doc_full = "Print a text string to the screen and log file. Variables in the string (denoted by $) are evaluated.\n\n[Documentation](https://docs.lammps.org/print.html)"
+parameters = [
+  { name = "string", param_type = "String", required = true, doc = "Text string to print" },
+]
+
+[[commands]]
+name = "log"
+category = "Output"
+doc_short = "Specify a log file for LAMMPS output"
+doc_full = "Specify a log file for LAMMPS to write thermodynamic and other output to.\n\n[Documentation](https://docs.lammps.org/log.html)"
+parameters = [
+  { name = "file", param_type = "FileName", required = true, doc = "Name of log file" },
+]
+
+[[commands]]
+name = "echo"
+category = "Control"
+doc_short = "Control echoing of input script"
+doc_full = "Set whether input script commands are echoed to the screen and log file.\n\n[Documentation](https://docs.lammps.org/echo.html)"
+parameters = [
+  { name = "style", param_type = "Enum(['none', 'screen', 'log', 'both'])", required = true, doc = "Echo style" },
+]
+
+[[commands]]
+name = "clear"
+category = "Control"
+doc_short = "Delete all atoms and reset settings"
+doc_full = "Delete all atoms, reset all simulation box information, and clear all settings.\n\n[Documentation](https://docs.lammps.org/clear.html)"
+parameters = []
+
+[[commands]]
+name = "quit"
+category = "Control"
+doc_short = "Exit LAMMPS"
+doc_full = "Exit LAMMPS with an optional exit status.\n\n[Documentation](https://docs.lammps.org/quit.html)"
+parameters = [
+  { name = "status", param_type = "Integer", required = false, doc = "Exit status (optional)" },
+]
+
+[[commands]]
+name = "replicate"
+category = "Setup"
+doc_short = "Replicate the simulation box"
+doc_full = "Replicate the current simulation box and atoms in one or more dimensions.\n\n[Documentation](https://docs.lammps.org/replicate.html)"
+parameters = [
+  { name = "nx", param_type = "Integer", required = true, doc = "Replication factor in x" },
+  { name = "ny", param_type = "Integer", required = true, doc = "Replication factor in y" },
+  { name = "nz", param_type = "Integer", required = true, doc = "Replication factor in z" },
+]
+
+[[commands]]
+name = "reset_timestep"
+category = "Setup"
+doc_short = "Reset the timestep counter"
+doc_full = "Set the timestep counter to a specified value.\n\n[Documentation](https://docs.lammps.org/reset_timestep.html)"
+parameters = [
+  { name = "N", param_type = "Integer", required = true, doc = "New timestep value" },
+]
+
+[[commands]]
+name = "restart"
+category = "Output"
+doc_short = "Write restart files during a run"
+doc_full = "Write out restart files at specified frequencies during a simulation run.\n\n[Documentation](https://docs.lammps.org/restart.html)"
+parameters = [
+  { name = "N", param_type = "Integer", required = true, doc = "Write restart every N steps (0 to turn off)" },
+  { name = "file", param_type = "FileName", required = true, doc = "Restart file name template" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Optional keywords/values" },
+]
+
+[[commands]]
+name = "dielectrics"
+category = "Setup"
+doc_short = "Enable dielectric boundary calculations"
+doc_full = "Turn on dielectric boundary calculations for implicit solvent models.\n\n[Documentation](https://docs.lammps.org/dielectrics.html)"
+parameters = [
+  { name = "ediff", param_type = "Float", required = true, doc = "Energy convergence tolerance" },
+  { name = "args", param_type = "Repeat(String)", required = false, doc = "Additional settings" },
+]

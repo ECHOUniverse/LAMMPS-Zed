@@ -1,0 +1,226 @@
+[[styles]]
+name = "none"
+category = "Pair"
+since_version = "1995"
+doc_short = "No pairwise interactions"
+doc_full = "Turn off pairwise interactions. No neighbor lists are built and no pairwise forces are computed.\n\n[Documentation](https://docs.lammps.org/pair_style.html)"
+required_args = []
+optional_args = []
+related_commands = []
+
+[[styles]]
+name = "lj/cut"
+category = "Pair"
+since_version = "1995"
+doc_short = "Lennard-Jones potential with a cutoff"
+doc_full = "The standard 12-6 Lennard-Jones potential with a cutoff. Parameters: epsilon and sigma.\n\n[Documentation](https://docs.lammps.org/pair_lj.html)"
+required_args = [
+  { name = "cutoff", param_type = "Float", required = true, doc = "Global cutoff for LJ interactions" },
+]
+optional_args = []
+related_commands = ["pair_modify", "pair_coeff"]
+
+[[styles]]
+name = "lj/cut/coul/cut"
+category = "Pair"
+since_version = "2005"
+doc_short = "LJ + Coulombic with cutoffs"
+doc_full = "Lennard-Jones and Coulombic potentials, both using a simple cutoff.\n\n[Documentation](https://docs.lammps.org/pair_lj.html)"
+required_args = [
+  { name = "cutoff", param_type = "Float", required = true, doc = "Global cutoff for LJ interactions" },
+]
+optional_args = [
+  { name = "cutoff_coul", param_type = "Float", required = false, doc = "Cutoff for Coulombic (defaults to LJ cutoff)" },
+]
+related_commands = ["pair_modify", "pair_coeff", "kspace_style"]
+
+[[styles]]
+name = "lj/cut/coul/long"
+category = "Pair"
+since_version = "2005"
+doc_short = "LJ cutoff + Coulombic long-range"
+doc_full = "Lennard-Jones with cutoff, plus long-range Coulombic via kspace_style (Ewald/PPPM).\n\n[Documentation](https://docs.lammps.org/pair_lj.html)"
+required_args = [
+  { name = "cutoff", param_type = "Float", required = true, doc = "Global cutoff for LJ and short-range Coulombic" },
+]
+optional_args = [
+  { name = "cutoff_coul", param_type = "Float", required = false, doc = "Cutoff for Coulombic (defaults to LJ cutoff)" },
+]
+related_commands = ["pair_modify", "pair_coeff", "kspace_style"]
+
+[[styles]]
+name = "eam"
+category = "Pair"
+since_version = "2001"
+doc_short = "Embedded atom method for metals"
+doc_full = "Embedded atom method potential for metallic systems. Reads a single binary alloy file.\n\n[Documentation](https://docs.lammps.org/pair_eam.html)"
+required_args = []
+optional_args = []
+related_commands = ["pair_coeff"]
+
+[[styles]]
+name = "eam/alloy"
+category = "Pair"
+since_version = "2001"
+doc_short = "EAM alloy potential with individual element files"
+doc_full = "EAM alloy potential using separate EAM potential files for each element.\n\n[Documentation](https://docs.lammps.org/pair_eam.html)"
+required_args = []
+optional_args = []
+related_commands = ["pair_coeff"]
+
+[[styles]]
+name = "eam/fs"
+category = "Pair"
+since_version = "2005"
+doc_short = "Finnis-Sinclair EAM potential"
+doc_full = "Finnis-Sinclair formulation of the embedded atom method.\n\n[Documentation](https://docs.lammps.org/pair_eam.html)"
+required_args = []
+optional_args = []
+related_commands = ["pair_coeff"]
+
+[[styles]]
+name = "buck"
+category = "Pair"
+since_version = "2001"
+doc_short = "Buckingham potential"
+doc_full = "Buckingham potential for ionic materials: A*exp(-r/rho) - C/r^6.\n\n[Documentation](https://docs.lammps.org/pair_buck.html)"
+required_args = [
+  { name = "cutoff", param_type = "Float", required = true, doc = "Global cutoff" },
+]
+optional_args = []
+related_commands = ["pair_modify", "pair_coeff"]
+
+[[styles]]
+name = "buck/coul/long"
+category = "Pair"
+since_version = "2005"
+doc_short = "Buckingham + long-range Coulombic"
+doc_full = "Buckingham potential plus long-range Coulombic interactions.\n\n[Documentation](https://docs.lammps.org/pair_buck.html)"
+required_args = [
+  { name = "cutoff", param_type = "Float", required = true, doc = "Global cutoff for short-range" },
+]
+optional_args = [
+  { name = "cutoff_coul", param_type = "Float", required = false, doc = "Cutoff for Coulombic" },
+]
+related_commands = ["pair_modify", "pair_coeff", "kspace_style"]
+
+[[styles]]
+name = "tersoff"
+category = "Pair"
+since_version = "2001"
+doc_short = "Tersoff bond-order potential"
+doc_full = "Tersoff three-body bond-order potential for covalent systems.\n\n[Documentation](https://docs.lammps.org/pair_tersoff.html)"
+required_args = []
+optional_args = []
+related_commands = ["pair_coeff"]
+
+[[styles]]
+name = "airebo"
+category = "Pair"
+since_version = "2007"
+doc_short = "AIREBO potential for hydrocarbons"
+doc_full = "Adaptive Intermolecular Reactive Empirical Bond Order potential for hydrocarbons.\n\n[Documentation](https://docs.lammps.org/pair_airebo.html)"
+required_args = []
+optional_args = []
+related_commands = ["pair_coeff"]
+
+[[styles]]
+name = "reaxff"
+category = "Pair"
+since_version = "2008"
+doc_short = "ReaxFF reactive force field"
+doc_full = "ReaxFF reactive force field for modeling chemical reactions.\n\n[Documentation](https://docs.lammps.org/pair_reaxff.html)"
+required_args = []
+optional_args = []
+related_commands = ["pair_coeff"]
+
+[[styles]]
+name = "comb3"
+category = "Pair"
+since_version = "2010"
+doc_short = "Charge-optimized many-body (COMB3) potential"
+doc_full = "Third-generation charge-optimized many-body potential for variable-charge systems.\n\n[Documentation](https://docs.lammps.org/pair_comb.html)"
+required_args = []
+optional_args = []
+related_commands = ["pair_coeff"]
+
+[[styles]]
+name = "morse"
+category = "Pair"
+since_version = "2001"
+doc_short = "Morse potential"
+doc_full = "Morse potential: D0*[1 - exp(-alpha*(r-r0))]^2.\n\n[Documentation](https://docs.lammps.org/pair_morse.html)"
+required_args = [
+  { name = "cutoff", param_type = "Float", required = true, doc = "Global cutoff" },
+]
+optional_args = []
+related_commands = ["pair_modify", "pair_coeff"]
+
+[[styles]]
+name = "soft"
+category = "Pair"
+since_version = "2001"
+doc_short = "Soft core (cosine) potential"
+doc_full = "Soft core potential for use in minimization or overlapped initial configurations.\n\n[Documentation](https://docs.lammps.org/pair_soft.html)"
+required_args = [
+  { name = "cutoff", param_type = "Float", required = true, doc = "Global cutoff" },
+]
+optional_args = []
+related_commands = ["pair_modify", "pair_coeff"]
+
+[[styles]]
+name = "table"
+category = "Pair"
+since_version = "2001"
+doc_short = "Tabulated pairwise potential"
+doc_full = "Use tabulated data files for pairwise interactions.\n\n[Documentation](https://docs.lammps.org/pair_table.html)"
+required_args = [
+  { name = "style", param_type = "Enum(['lookup', 'linear', 'spline', 'bitmap'])", required = true, doc = "Interpolation style" },
+  { name = "N", param_type = "Integer", required = true, doc = "Number of table entries" },
+]
+optional_args = []
+related_commands = ["pair_coeff"]
+
+[[styles]]
+name = "hybrid"
+category = "Pair"
+since_version = "2001"
+doc_short = "Multiple pair styles simultaneously"
+doc_full = "Use different pair styles for different pairs of atom types.\n\n[Documentation](https://docs.lammps.org/pair_hybrid.html)"
+required_args = []
+optional_args = []
+related_commands = ["pair_coeff"]
+
+[[styles]]
+name = "hybrid/overlay"
+category = "Pair"
+since_version = "2005"
+doc_short = "Superimpose multiple pair styles"
+doc_full = "Superimpose multiple pair styles so all of them are applied to the same pairs.\n\n[Documentation](https://docs.lammps.org/pair_hybrid.html)"
+required_args = []
+optional_args = []
+related_commands = ["pair_coeff"]
+
+[[styles]]
+name = "coul/long"
+category = "Pair"
+since_version = "2005"
+doc_short = "Long-range Coulombic only"
+doc_full = "Long-range Coulombic interactions only, no short-range potential.\n\n[Documentation](https://docs.lammps.org/pair_coul.html)"
+required_args = [
+  { name = "cutoff", param_type = "Float", required = true, doc = "Cutoff for short-range part" },
+]
+optional_args = []
+related_commands = ["pair_modify", "pair_coeff", "kspace_style"]
+
+[[styles]]
+name = "lj/sf/dipole/sf"
+category = "Pair"
+since_version = "2015"
+doc_short = "LJ + dipole with shifted-force"
+doc_full = "Lennard-Jones plus point-dipole interactions with shifted-force truncation.\n\n[Documentation](https://docs.lammps.org/pair_dipole.html)"
+required_args = [
+  { name = "cutoff", param_type = "Float", required = true, doc = "Global cutoff" },
+]
+optional_args = []
+related_commands = ["pair_modify", "pair_coeff"]

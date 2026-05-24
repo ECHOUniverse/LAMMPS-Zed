@@ -1,0 +1,47 @@
+[[styles]]
+name = "pppm"
+category = "Kspace"
+since_version = "1999"
+doc_short = "Particle-Particle Particle-Mesh long-range solver"
+doc_full = "Particle-Particle Particle-Mesh (PPPM) solver for long-range Coulombic interactions using a 3D FFT mesh.\n\n[Documentation](https://docs.lammps.org/kspace_style.html)"
+required_args = [
+  { name = "accuracy", param_type = "Float", required = true, doc = "Desired relative accuracy" },
+]
+optional_args = []
+related_commands = ["kspace_modify"]
+
+[[styles]]
+name = "ewald"
+category = "Kspace"
+since_version = "1999"
+doc_short = "Standard Ewald summation"
+doc_full = "Standard Ewald summation for long-range Coulombic interactions.\n\n[Documentation](https://docs.lammps.org/kspace_style.html)"
+required_args = [
+  { name = "accuracy", param_type = "Float", required = true, doc = "Desired relative accuracy" },
+]
+optional_args = []
+related_commands = ["kspace_modify"]
+
+[[styles]]
+name = "pppm/tip4p"
+category = "Kspace"
+since_version = "2005"
+doc_short = "PPPM with TIP4P water support"
+doc_full = "PPPM solver for long-range Coulombic interactions with special handling for TIP4P water model charges.\n\n[Documentation](https://docs.lammps.org/kspace_style.html)"
+required_args = [
+  { name = "accuracy", param_type = "Float", required = true, doc = "Desired relative accuracy" },
+]
+optional_args = []
+related_commands = ["kspace_modify"]
+
+[[styles]]
+name = "msm"
+category = "Kspace"
+since_version = "2005"
+doc_short = "Multi-level summation method"
+doc_full = "Multi-level summation method for long-range Coulombic interactions using nested interpolations.\n\n[Documentation](https://docs.lammps.org/kspace_style.html)"
+required_args = [
+  { name = "accuracy", param_type = "Float", required = true, doc = "Desired relative accuracy" },
+]
+optional_args = []
+related_commands = ["kspace_modify"]

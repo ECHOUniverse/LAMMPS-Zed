@@ -1,0 +1,160 @@
+[[styles]]
+name = "temp"
+category = "Compute"
+since_version = "1995"
+doc_short = "Compute temperature of a group"
+doc_full = "Compute the temperature of a group of atoms.\n\n[Documentation](https://docs.lammps.org/compute_temp.html)"
+required_args = []
+optional_args = []
+related_commands = ["compute_modify"]
+
+[[styles]]
+name = "pe"
+category = "Compute"
+since_version = "1995"
+doc_short = "Compute potential energy"
+doc_full = "Compute the potential energy of the atoms in a group.\n\n[Documentation](https://docs.lammps.org/compute_pe.html)"
+required_args = []
+optional_args = []
+related_commands = []
+
+[[styles]]
+name = "ke"
+category = "Compute"
+since_version = "1995"
+doc_short = "Compute kinetic energy"
+doc_full = "Compute the kinetic energy of the atoms in a group.\n\n[Documentation](https://docs.lammps.org/compute_ke.html)"
+required_args = []
+optional_args = []
+related_commands = []
+
+[[styles]]
+name = "pressure"
+category = "Compute"
+since_version = "1995"
+doc_short = "Compute pressure tensor"
+doc_full = "Compute the pressure tensor and scalar pressure of the atoms in a group.\n\n[Documentation](https://docs.lammps.org/compute_pressure.html)"
+required_args = []
+optional_args = []
+related_commands = ["compute_modify"]
+
+[[styles]]
+name = "stress/atom"
+category = "Compute"
+since_version = "2005"
+doc_short = "Compute per-atom stress tensor"
+doc_full = "Compute the per-atom stress tensor for each atom in a group.\n\n[Documentation](https://docs.lammps.org/compute_stress_atom.html)"
+required_args = []
+optional_args = []
+related_commands = []
+
+[[styles]]
+name = "centro/atom"
+category = "Compute"
+since_version = "2005"
+doc_short = "Compute per-atom centro-symmetry parameter"
+doc_full = "Compute the centro-symmetry parameter for each atom, useful for identifying crystal defects.\n\n[Documentation](https://docs.lammps.org/compute_centro_atom.html)"
+required_args = []
+optional_args = []
+related_commands = []
+
+[[styles]]
+name = "displace/atom"
+category = "Compute"
+since_version = "2005"
+doc_short = "Compute per-atom displacement"
+doc_full = "Compute the displacement of each atom from a reference position.\n\n[Documentation](https://docs.lammps.org/compute_displace_atom.html)"
+required_args = []
+optional_args = []
+related_commands = []
+
+[[styles]]
+name = "msd"
+category = "Compute"
+since_version = "2005"
+doc_short = "Compute mean-squared displacement"
+doc_full = "Compute the mean-squared displacement of a group of atoms.\n\n[Documentation](https://docs.lammps.org/compute_msd.html)"
+required_args = []
+optional_args = []
+related_commands = ["compute_modify"]
+
+[[styles]]
+name = "vacf"
+category = "Compute"
+since_version = "2005"
+doc_short = "Compute velocity auto-correlation function"
+doc_full = "Compute the velocity auto-correlation function for a group of atoms.\n\n[Documentation](https://docs.lammps.org/compute_vacf.html)"
+required_args = []
+optional_args = []
+related_commands = []
+
+[[styles]]
+name = "rdf"
+category = "Compute"
+since_version = "2005"
+doc_short = "Compute radial distribution function"
+doc_full = "Compute the radial distribution function g(r) for a group of atom pairs.\n\n[Documentation](https://docs.lammps.org/compute_rdf.html)"
+required_args = [
+  { name = "Nbin", param_type = "Integer", required = true, doc = "Number of bins" },
+]
+optional_args = []
+related_commands = []
+
+[[styles]]
+name = "coord/atom"
+category = "Compute"
+since_version = "2005"
+doc_short = "Compute per-atom coordination number"
+doc_full = "Compute the coordination number for each atom within a specified cutoff.\n\n[Documentation](https://docs.lammps.org/compute_coord_atom.html)"
+required_args = [
+  { name = "cutoff", param_type = "Float", required = true, doc = "Coordination cutoff distance" },
+]
+optional_args = []
+related_commands = []
+
+[[styles]]
+name = "reduce"
+category = "Compute"
+since_version = "2003"
+doc_short = "Reduce per-atom values to global scalars"
+doc_full = "Reduce per-atom quantities to global scalar or vector values (sum, min, max, ave).\n\n[Documentation](https://docs.lammps.org/compute_reduce.html)"
+required_args = [
+  { name = "mode", param_type = "Enum(['sum', 'min', 'max', 'ave'])", required = true, doc = "Reduction mode" },
+  { name = "input", param_type = "Repeat(String)", required = true, doc = "Per-atom values to reduce" },
+]
+optional_args = []
+related_commands = []
+
+[[styles]]
+name = "property/atom"
+category = "Compute"
+since_version = "2005"
+doc_short = "Extract per-atom properties"
+doc_full = "Extract and store per-atom quantities (id, type, mass, x, y, z, etc.) as a compute that other commands can access.\n\n[Documentation](https://docs.lammps.org/compute_property_atom.html)"
+required_args = [
+  { name = "properties", param_type = "Repeat(String)", required = true, doc = "Properties to extract" },
+]
+optional_args = []
+related_commands = []
+
+[[styles]]
+name = "gyration"
+category = "Compute"
+since_version = "2007"
+doc_short = "Compute radius of gyration"
+doc_full = "Compute the radius of gyration of a group of atoms as well as the eigenvalues and eigenvectors.\n\n[Documentation](https://docs.lammps.org/compute_gyration.html)"
+required_args = []
+optional_args = []
+related_commands = []
+
+[[styles]]
+name = "heat/flux"
+category = "Compute"
+since_version = "2010"
+doc_short = "Compute heat flux vector"
+doc_full = "Compute the heat flux vector for a group of atoms.\n\n[Documentation](https://docs.lammps.org/compute_heat_flux.html)"
+required_args = [
+  { name = "kappa", param_type = "Float", required = true, doc = "Thermal conductivity for kinetic term" },
+]
+optional_args = []
+related_commands = ["compute_modify"]

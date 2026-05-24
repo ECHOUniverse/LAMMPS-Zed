@@ -1,0 +1,39 @@
+[[styles]]
+name = "opls"
+category = "Dihedral"
+since_version = "2001"
+doc_short = "OPLS dihedral potential"
+doc_full = "OPLS dihedral potential: K1/2*(1 + cos(phi)) + K2/2*(1 - cos(2*phi)) + K3/2*(1 + cos(3*phi)) + K4/2*(1 - cos(4*phi)).\n\n[Documentation](https://docs.lammps.org/dihedral_opls.html)"
+required_args = []
+optional_args = []
+related_commands = ["dihedral_coeff"]
+
+[[styles]]
+name = "harmonic"
+category = "Dihedral"
+since_version = "2001"
+doc_short = "Harmonic dihedral potential"
+doc_full = "Harmonic dihedral potential: K*(1 + d*cos(n*phi)).\n\n[Documentation](https://docs.lammps.org/dihedral_harmonic.html)"
+required_args = []
+optional_args = []
+related_commands = ["dihedral_coeff"]
+
+[[styles]]
+name = "charmm"
+category = "Dihedral"
+since_version = "2003"
+doc_short = "CHARMM dihedral potential"
+doc_full = "CHARMM dihedral potential with multiple multiplicities and weighting factors.\n\n[Documentation](https://docs.lammps.org/dihedral_charmm.html)"
+required_args = []
+optional_args = []
+related_commands = ["dihedral_coeff"]
+
+[[styles]]
+name = "multi/harmonic"
+category = "Dihedral"
+since_version = "2005"
+doc_short = "Fourier dihedral potential"
+doc_full = "Multi-harmonic (Fourier) dihedral potential: sum A_n*cos(n*phi - delta_n)^(m_n).\n\n[Documentation](https://docs.lammps.org/dihedral_multi_harmonic.html)"
+required_args = []
+optional_args = []
+related_commands = ["dihedral_coeff"]
