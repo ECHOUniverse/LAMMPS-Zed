@@ -1,5 +1,5 @@
 [package]
-name = "lammps-zed-extension"
+name = "lammps"
 version = "0.1.0"
 edition = "2021"
 description = "Zed extension for LAMMPS LSP integration"

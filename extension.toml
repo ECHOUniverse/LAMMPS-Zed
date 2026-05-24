@@ -10,8 +10,8 @@ snippets = ["./snippets/lammps.json"]
 
 [grammars.lammps]
 repository = "https://github.com/ECHOUniverse/tree-sitter-lammps"
-rev = "b91533162dd35827315a03150be753886983250e"
+commit = "b91533162dd35827315a03150be753886983250e"
 
 [language_servers.lammps]
 name = "LAMMPS LSP"
-languages = ["LAMMPS"]
+language = "LAMMPS"
