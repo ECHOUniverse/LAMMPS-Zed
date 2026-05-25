@@ -13,9 +13,9 @@ jobs:
             suffix: darwin-arm64
             target: ''
             ext: ''
-          - os: macos-13
+          - os: macos-latest
             suffix: darwin-x64
-            target: ''
+            target: x86_64-apple-darwin
             ext: ''
           - os: ubuntu-latest
             suffix: linux-x64
