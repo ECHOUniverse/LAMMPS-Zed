@@ -50,8 +50,8 @@ jobs:
             GCC_PREFIX="${TARGET%%-*}"
             if [[ "$TARGET" == *-linux-gnu ]]; then
               sudo apt-get update && sudo apt-get install -y "gcc-${GCC_PREFIX}-linux-gnu"
-              LINKER_VAR="CARGO_TARGET_${TARGET//-/_}_LINKER"
-              export "${LINKER_VAR}=${GCC_PREFIX}-linux-gnu-gcc"
+              TARGET_ENV="CARGO_TARGET_$(echo "$TARGET" | tr 'a-z-' 'A-Z_')_LINKER"
+              export "${TARGET_ENV}=${GCC_PREFIX}-linux-gnu-gcc"
             fi
             cargo build --release --manifest-path lsp/Cargo.toml --target "$TARGET"
             echo "BINARY_PATH=lsp/target/$TARGET/release/lammps-lsp$EXT" >> $GITHUB_ENV
