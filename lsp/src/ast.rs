@@ -189,7 +189,7 @@ impl<'a> Ast<'a> {
     }
 
     /// Find the command_name child within a command node.
-    fn find_command_name_child(&self, node: Node<'a>) -> Option<&'a str> {
+    pub fn find_command_name_child(&self, node: Node<'a>) -> Option<&'a str> {
         for i in 0..node.named_child_count() {
             if let Some(child) = node.named_child(i) {
                 if child.kind() == "command_name" {
