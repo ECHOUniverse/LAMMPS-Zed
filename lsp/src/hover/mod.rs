@@ -25,6 +25,8 @@ pub fn run_hover(ast: &Ast, semantic: &SemanticCache, position: Position) -> Opt
         "variable" => {
             hover_definition(node_text, &semantic.variable_defs, "Variable", ast.source)
         }
+        "fix" => hover_command_name("fix"),
+        "compute" => hover_command_name("compute"),
         "thermo_kwarg" => hover_thermo_keyword(node_text),
         "func" => hover_math_function(node_text),
         _ => {
@@ -42,13 +44,20 @@ pub fn run_hover(ast: &Ast, semantic: &SemanticCache, position: Position) -> Opt
         }
     }?;
 
+    // For fix/compute nodes, the node range spans the entire line;
+    // use the first child (the keyword token) for accurate highlight range.
+    let range_node = match node_kind {
+        "fix" | "compute" => node.child(0).unwrap_or(node),
+        _ => node,
+    };
+
     Some(Hover {
         contents: HoverContents::Markup(MarkupContent {
             kind: MarkupKind::Markdown,
             value: markdown,
         }),
         range: Some(crate::ast::tree_sitter_range_to_lsp(
-            node.range(),
+            range_node.range(),
             ast.source,
         )),
     })
@@ -247,7 +256,7 @@ fn style_category_for_command(cmd_name: &str) -> Option<&'static str> {
 }
 
 /// Try parameter-level hover: show documentation for the specific argument
-/// at the cursor position.
+/// at the cursor position, with a link to the parent command's documentation.
 fn hover_parameter(
     node: Node,
     cmd_node: Node,
@@ -262,12 +271,39 @@ fn hover_parameter(
     let arg_idx = find_arg_position(node, cmd_node)?;
     let param = cmd.parameters.get(arg_idx)?;
 
-    Some(format!(
+    let mut result = format!(
         "**`{}`** — *{}*\n\n{}",
         param.name,
         format_param_type(&param.param_type),
         param.doc,
-    ))
+    );
+
+    // Append documentation link extracted from the command's doc_full.
+    if let Some(link) = extract_doc_link(&cmd.doc_full) {
+        result.push_str(&format!("\n\n---\n[📖 {} 文档]({})", cmd_name, link));
+    }
+
+    Some(result)
+}
+
+/// Extract the first markdown link URL from a doc string.
+/// Looks for patterns like `[Documentation](https://...)`.
+fn extract_doc_link(doc: &str) -> Option<&str> {
+    // Find markdown link pattern: [text](url)
+    if let Some(start) = doc.find("](") {
+        let url_start = start + 2;
+        if let Some(end) = doc[url_start..].find(')') {
+            return Some(&doc[url_start..url_start + end]);
+        }
+    }
+    // Also try raw URL (https://...)
+    if let Some(start) = doc.find("https://") {
+        let rest = &doc[start..];
+        let end = rest.find(|c: char| c.is_whitespace() || c == ')')
+            .unwrap_or(rest.len());
+        return Some(&rest[..end]);
+    }
+    None
 }
 
 /// Determine the 0-based argument index that `node` occupies within `cmd_node`.
@@ -531,6 +567,40 @@ mod tests {
         let h = hover_text(src, 0, 9); // cursor on "T" (variable name)
         assert!(h.contains("Variable"), "should show Variable def: {}", h);
         assert!(h.contains("line 1"), "should show line number: {}", h);
+    }
+
+    // ── Fix/compute command keyword hover ──────────────────
+
+    #[test]
+    fn test_fix_keyword_hover() {
+        let src = "fix 1 all npt temp 300 300 0.1\n";
+        let h = hover_text(src, 0, 0); // cursor on "fix"
+        assert!(h.contains("`fix`"), "should show command name: {}", h);
+        assert!(h.contains("Set a fix"), "should show doc: {}", h);
+    }
+
+    #[test]
+    fn test_compute_keyword_hover() {
+        let src = "compute myTemp all temp\n";
+        let h = hover_text(src, 0, 0); // cursor on "compute"
+        assert!(h.contains("`compute`"), "should show command name: {}", h);
+        assert!(h.contains("compute"), "should show doc: {}", h);
+    }
+
+    // ── Doc link in parameter hover ───────────────────────
+
+    #[test]
+    fn test_parameter_hover_has_doc_link() {
+        let src = "units metal\n";
+        let h = hover_text(src, 0, 7); // cursor on "metal"
+        assert!(h.contains("docs.lammps.org/units"), "should contain doc link: {}", h);
+    }
+
+    #[test]
+    fn test_parameter_hover_boundary_has_link() {
+        let src = "boundary p p p\n";
+        let h = hover_text(src, 0, 10); // cursor on first "p"
+        assert!(h.contains("docs.lammps.org/boundary"), "should contain doc link: {}", h);
     }
 
 }

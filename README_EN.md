@@ -18,7 +18,7 @@ A [Zed](https://zed.dev) editor extension for LAMMPS `.in` input scripts, featur
 ### LSP Intelligent Services
 - **Diagnostics**: Real-time checking of command spelling, variable references, include file existence, expression syntax
 - **Completion**: Command names, style names, variable/ID (`$x`/`${x}`/`v_`/`c_`/`f_`), parameter keywords
-- **Hover Documentation**: Detailed command/style documentation, variable definition line content
+- **Hover Documentation**: Command names/parameters (with doc links), all 8 style categories (pair/bond/angle/dihedral/improper/kspace/fix/compute), variable definitions
 - **Go-to-Definition**: Jump to variable/fix/compute/label definitions
 - **Find References**: Find all variable/fix/compute references
 - **Rename**: Safe renaming of variable/fix/compute IDs
