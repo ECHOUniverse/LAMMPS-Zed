@@ -1,16 +1,20 @@
 id = "lammps"
 name = "LAMMPS"
-version = "0.1.0"
+version = "0.2.0"
 schema_version = 1
 authors = ["hanxu <eisult@foxmail.com>"]
-description = "LAMMPS molecular dynamics input script (.in) syntax highlighting for Zed"
+description = "LAMMPS molecular dynamics input script (.in) and data file (.data/.lmp) syntax highlighting for Zed"
 repository = "https://github.com/ECHOUniverse/LAMMPS-Zed"
-languages = ["languages/lammps"]
-snippets = ["./snippets/lammps.json"]
+languages = ["languages/lammps", "languages/lammps-data"]
+snippets = ["./snippets/lammps.json", "./snippets/lammps-data.json"]
 
 [grammars.lammps]
 repository = "https://github.com/ECHOUniverse/tree-sitter-lammps"
 commit = "b91533162dd35827315a03150be753886983250e"
+
+[grammars.lammps_data]
+repository = "https://github.com/ECHOUniverse/tree-sitter-lammps-data"
+commit = "c9b43fe70fda020c3dcb9b988650051671aa068f"
 
 [language_servers.lammps]
 name = "LAMMPS LSP"

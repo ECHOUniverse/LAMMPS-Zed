@@ -189,6 +189,7 @@ impl LanguageServer for Backend {
         let uri = params.text_document.uri;
         log::info!("did_close: {:?}", uri);
         self.documents.lock().unwrap().remove(&uri);
+        self.debounce_counters.lock().unwrap().remove(&uri);
     }
 
     async fn did_save(&self, params: DidSaveTextDocumentParams) {

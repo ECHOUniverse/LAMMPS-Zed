@@ -1,23 +1,14 @@
-use std::collections::HashMap;
 use std::path::PathBuf;
 
 /// Resolves include/jump file targets across the workspace.
 pub struct IncludeResolver {
-    /// Cache of resolved files: resolved path -> (source text, modification time)
-    file_cache: HashMap<PathBuf, CachedFile>,
     /// Max recursion depth for include chains
     max_depth: usize,
-}
-
-struct CachedFile {
-    source: String,
-    // mtime: SystemTime, // TODO: for cache invalidation
 }
 
 impl IncludeResolver {
     pub fn new() -> Self {
         Self {
-            file_cache: HashMap::new(),
             max_depth: 10,
         }
     }

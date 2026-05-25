@@ -1,0 +1,115 @@
+{
+  "Data file header": {
+    "prefix": "data header",
+    "body": [
+      "${1:Description line}",
+      "",
+      "${2:1000} atoms",
+      "${3:5} atom types",
+      "${4:2} bond types",
+      "${5:3} angle types",
+      "",
+      "${6:-0.5} ${7:0.5} xlo xhi",
+      "${8:-0.5} ${9:0.5} ylo yhi",
+      "${10:-0.5} ${11:0.5} zlo zhi",
+      "",
+      "Masses",
+      "",
+      "${12:1} ${13:12.01}",
+      "${14:2} ${15:1.008}",
+      ""
+    ],
+    "description": "Data file header with counts, box bounds, and masses"
+  },
+  "Masses section": {
+    "prefix": "masses",
+    "body": [
+      "Masses",
+      "",
+      "${1:1} ${2:12.01}",
+      "${3:2} ${4:1.008}",
+      ""
+    ],
+    "description": "Masses section for atom type masses"
+  },
+  "Atoms section": {
+    "prefix": "atoms section",
+    "body": [
+      "Atoms # ${1:atomic}",
+      "",
+      "${2:1} ${3:type} ${4:x} ${5:y} ${6:z}",
+      ""
+    ],
+    "description": "Atoms section with atomic style columns"
+  },
+  "Bonds section": {
+    "prefix": "bonds section",
+    "body": [
+      "Bonds",
+      "",
+      "${1:1} ${2:type} ${3:atom1} ${4:atom2}",
+      ""
+    ],
+    "description": "Bonds section"
+  },
+  "Angles section": {
+    "prefix": "angles section",
+    "body": [
+      "Angles",
+      "",
+      "${1:1} ${2:type} ${3:atom1} ${4:atom2} ${5:atom3}",
+      ""
+    ],
+    "description": "Angles section"
+  },
+  "Dihedrals section": {
+    "prefix": "dihedrals section",
+    "body": [
+      "Dihedrals",
+      "",
+      "${1:1} ${2:type} ${3:atom1} ${4:atom2} ${5:atom3} ${6:atom4}",
+      ""
+    ],
+    "description": "Dihedrals section"
+  },
+  "Pair Coeffs section": {
+    "prefix": "pair coeffs",
+    "body": [
+      "Pair Coeffs # ${1:lj/cut}",
+      "",
+      "${2:1} ${3:epsilon} ${4:sigma}",
+      ""
+    ],
+    "description": "Pair Coeffs section (force field)"
+  },
+  "Bond Coeffs section": {
+    "prefix": "bond coeffs",
+    "body": [
+      "Bond Coeffs # ${1:harmonic}",
+      "",
+      "${2:1} ${3:K} ${4:r0}",
+      ""
+    ],
+    "description": "Bond Coeffs section (force field)"
+  },
+  "Angle Coeffs section": {
+    "prefix": "angle coeffs",
+    "body": [
+      "Angle Coeffs # ${1:harmonic}",
+      "",
+      "${2:1} ${3:K} ${4:theta0}",
+      ""
+    ],
+    "description": "Angle Coeffs section (force field)"
+  },
+  "Velocities section": {
+    "prefix": "velocities",
+    "body": [
+      "Velocities",
+      "",
+      "${1:1} ${2:vx} ${3:vy} ${4:vz}",
+      ""
+    ],
+    "description": "Velocities section"
+  }
+}
