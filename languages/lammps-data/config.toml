@@ -13,6 +13,10 @@ brackets = [
   { start = "[", end = "]", close = true, newline = false },
 ]
 
+# 字符串内禁用自动补全触发
+[overrides.string]
+completion_query_characters = []
+
 # 注释内禁用自动补全触发
 [overrides.comment]
 completion_query_characters = []

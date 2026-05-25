@@ -14,7 +14,7 @@ commit = "b91533162dd35827315a03150be753886983250e"
 
 [grammars.lammps_data]
 repository = "https://github.com/ECHOUniverse/tree-sitter-lammps-data"
-commit = "c9b43fe70fda020c3dcb9b988650051671aa068f"
+commit = "0c5656ece8da5b808ee22a292d81fae1140918e4"
 
 [language_servers.lammps]
 name = "LAMMPS LSP"
