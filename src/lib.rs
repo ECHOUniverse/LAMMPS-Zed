@@ -1,7 +1,6 @@
 use zed_extension_api as zed;
 
 struct LammpsExtension {
-    /// Lazily resolved path to the lammps-lsp binary.
     cached_binary_path: Option<String>,
 }
 
@@ -17,7 +16,7 @@ impl zed::Extension for LammpsExtension {
         language_server_id: &zed::LanguageServerId,
         worktree: &zed::Worktree,
     ) -> zed::Result<zed::Command> {
-        // Strategy 1: Use user-configured binary path from Zed settings
+        // Strategy 1: User-configured binary path from Zed settings
         let binary_path = zed::settings::LspSettings::for_worktree(
             language_server_id.as_ref(),
             worktree,
@@ -37,7 +36,13 @@ impl zed::Extension for LammpsExtension {
             }
         }
 
-        // Strategy 3: Error if not found
+        // Strategy 3: Auto-download from GitHub Releases
+        if self.cached_binary_path.is_none() {
+            if let Some(path) = try_download_binary() {
+                self.cached_binary_path = Some(path);
+            }
+        }
+
         match &self.cached_binary_path {
             Some(path) => Ok(zed::Command {
                 command: path.clone(),
@@ -129,6 +134,47 @@ impl zed::Extension for LammpsExtension {
             filter_range: (0..symbol.name.len()).into(),
         })
     }
+}
+
+fn try_download_binary() -> Option<String> {
+    let (os, arch) = zed::current_platform();
+
+    let os_str = match os {
+        zed::Os::Mac => "darwin",
+        zed::Os::Linux => "linux",
+        zed::Os::Windows => "windows",
+    };
+
+    let arch_str = match arch {
+        zed::Architecture::Aarch64 => "arm64",
+        zed::Architecture::X8664 => "x64",
+        zed::Architecture::X86 => "x86",
+    };
+
+    let ext = if matches!(os, zed::Os::Windows) { ".exe" } else { "" };
+    let binary_name = format!("lammps-lsp-{}-{}{}", os_str, arch_str, ext);
+
+    let release = zed::latest_github_release(
+        "ECHOUniverse/LAMMPS-Zed",
+        zed::GithubReleaseOptions {
+            require_assets: true,
+            pre_release: false,
+        },
+    )
+    .ok()?;
+
+    let asset = release.assets.iter().find(|a| a.name == binary_name)?;
+
+    zed::download_file(
+        &asset.download_url,
+        &binary_name,
+        zed::DownloadedFileType::Uncompressed,
+    )
+    .ok()?;
+
+    zed::make_file_executable(&binary_name).ok()?;
+
+    Some(binary_name)
 }
 
 zed::register_extension!(LammpsExtension);

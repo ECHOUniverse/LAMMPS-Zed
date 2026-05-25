@@ -1,0 +1,96 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            suffix: darwin-arm64
+            target: ''
+            ext: ''
+          - os: macos-13
+            suffix: darwin-x64
+            target: ''
+            ext: ''
+          - os: ubuntu-latest
+            suffix: linux-x64
+            target: ''
+            ext: ''
+          - os: ubuntu-latest
+            suffix: linux-arm64
+            target: aarch64-unknown-linux-gnu
+            ext: ''
+          - os: ubuntu-latest
+            suffix: linux-x86
+            target: i686-unknown-linux-gnu
+            ext: ''
+          - os: windows-latest
+            suffix: windows-x64
+            target: ''
+            ext: .exe
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Build LSP
+        shell: bash
+        run: |
+          if [ -n "$TARGET" ]; then
+            rustup target add "$TARGET"
+            # Install cross-compilation toolchain for linux-gnu targets
+            GCC_PREFIX="${TARGET%%-*}"
+            if [[ "$TARGET" == *-linux-gnu ]]; then
+              sudo apt-get update && sudo apt-get install -y "gcc-${GCC_PREFIX}-linux-gnu"
+              LINKER_VAR="CARGO_TARGET_${TARGET//-/_}_LINKER"
+              export "${LINKER_VAR}=${GCC_PREFIX}-linux-gnu-gcc"
+            fi
+            cargo build --release --manifest-path lsp/Cargo.toml --target "$TARGET"
+            echo "BINARY_PATH=lsp/target/$TARGET/release/lammps-lsp$EXT" >> $GITHUB_ENV
+          else
+            cargo build --release --manifest-path lsp/Cargo.toml
+            echo "BINARY_PATH=lsp/target/release/lammps-lsp$EXT" >> $GITHUB_ENV
+          fi
+        env:
+          TARGET: ${{ matrix.target }}
+          EXT: ${{ matrix.ext }}
+
+      - name: Prepare binary
+        shell: bash
+        run: |
+          ARTIFACT="lammps-lsp-${{ matrix.suffix }}${{ matrix.ext }}"
+          cp "$BINARY_PATH" "$ARTIFACT"
+          chmod +x "$ARTIFACT" 2>/dev/null || true
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lammps-lsp-${{ matrix.suffix }}
+          path: lammps-lsp-${{ matrix.suffix }}${{ matrix.ext }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/download-artifact@v4
+
+      - name: Flatten artifacts
+        run: |
+          mkdir -p dist
+          cp lammps-lsp-*/lammps-lsp-* dist/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*
+          generate_release_notes: true
