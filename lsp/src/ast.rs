@@ -374,7 +374,7 @@ impl<'a> Ast<'a> {
     // ── Node utilities ─────────────────────────────────────
 
     /// Get the text of a named child with the given field name.
-    fn field_text(&self, node: Node<'a>, field_name: &str) -> Option<&'a str> {
+    pub fn field_text(&self, node: Node<'a>, field_name: &str) -> Option<&'a str> {
         node.child_by_field_name(field_name)
             .map(|child| self.node_text(child))
     }

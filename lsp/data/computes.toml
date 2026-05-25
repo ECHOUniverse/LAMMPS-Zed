@@ -158,3 +158,23 @@ required_args = [
 ]
 optional_args = []
 related_commands = ["compute_modify"]
+
+[[styles]]
+name = "pe/atom"
+category = "Compute"
+since_version = "1995"
+doc_short = "Compute per-atom potential energy"
+doc_full = "Compute the per-atom potential energy for each atom in a group.\n\n[Documentation](https://docs.lammps.org/compute_pe_atom.html)"
+required_args = []
+optional_args = []
+related_commands = []
+
+[[styles]]
+name = "ke/atom"
+category = "Compute"
+since_version = "1995"
+doc_short = "Compute per-atom kinetic energy"
+doc_full = "Compute the per-atom kinetic energy for each atom in a group.\n\n[Documentation](https://docs.lammps.org/compute_ke_atom.html)"
+required_args = []
+optional_args = []
+related_commands = []

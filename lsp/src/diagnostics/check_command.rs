@@ -73,17 +73,8 @@ pub fn check(ast: &Ast, config: &DiagnosticsConfig) -> Vec<Diagnostic> {
                 }
             }
             crate::ast::CommandKind::Fix => {
-                // Check fix style against known styles
-                let style_text = ast.node_text(cmd.node)
-                    .lines()
-                    .nth(0)
-                    .unwrap_or("");
-
-                // Extract the style name after fix_id and group_id
-                // fix ID group style args...
-                let parts: Vec<&str> = style_text.split_whitespace().collect();
-                if parts.len() >= 4 {
-                    let style_name = parts[3]; // fix ID group style
+                // Check fix style against known styles using tree-sitter field
+                if let Some(style_name) = ast.field_text(cmd.node, "style") {
                     let known_style = COMMAND_DB.fix_styles.iter()
                         .any(|s| s.name == style_name);
 
@@ -100,14 +91,8 @@ pub fn check(ast: &Ast, config: &DiagnosticsConfig) -> Vec<Diagnostic> {
                 }
             }
             crate::ast::CommandKind::Compute => {
-                // Check compute style against known styles
-                let style_text = ast.node_text(cmd.node)
-                    .lines()
-                    .nth(0)
-                    .unwrap_or("");
-                let parts: Vec<&str> = style_text.split_whitespace().collect();
-                if parts.len() >= 4 {
-                    let style_name = parts[3]; // compute ID group style
+                // Check compute style against known styles using tree-sitter field
+                if let Some(style_name) = ast.field_text(cmd.node, "style") {
                     let known_style = COMMAND_DB.compute_styles.iter()
                         .any(|s| s.name == style_name);
 
@@ -189,4 +174,94 @@ fn levenshtein_distance(a: &str, b: &str) -> usize {
     }
 
     prev_row[b_len]
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::ast::Ast;
+    use crate::config::DiagnosticsConfig;
+    use crate::parser::ParserState;
+
+    #[test]
+    fn test_compute_pe_atom_is_recognized() {
+        let source = "compute peratom all pe/atom\n";
+        let parser = ParserState::new(source);
+        let ast = Ast::new(&parser.source, &parser.tree);
+        let config = DiagnosticsConfig::default();
+        let diagnostics = check(&ast, &config);
+
+        // Should NOT produce "unknown compute style" warning for pe/atom
+        let has_pe_atom_warning = diagnostics.iter().any(|d| {
+            d.message.contains("未知 compute style") && d.message.contains("pe/atom")
+        });
+        assert!(
+            !has_pe_atom_warning,
+            "pe/atom should be recognized as a valid compute style, but got warning"
+        );
+    }
+
+    #[test]
+    fn test_write_data_is_recognized() {
+        let source = "write_data model.data\n";
+        let parser = ParserState::new(source);
+        let ast = Ast::new(&parser.source, &parser.tree);
+        let config = DiagnosticsConfig::default();
+        let diagnostics = check(&ast, &config);
+
+        // Should NOT produce "unknown command" warning for write_data
+        let has_write_data_warning = diagnostics.iter().any(|d| {
+            d.message.contains("未知命令") && d.message.contains("write_data")
+        });
+        assert!(
+            !has_write_data_warning,
+            "write_data should be recognized as a valid command, but got warning"
+        );
+
+        // Should NOT produce argument count warning
+        let has_arg_count_warning = diagnostics.iter().any(|d| {
+            d.message.contains("参数不足") && d.message.contains("write_data")
+        });
+        assert!(
+            !has_arg_count_warning,
+            "write_data with 1 arg should satisfy required param count, but got E004"
+        );
+    }
+
+    #[test]
+    fn test_write_data_with_dot_filename() {
+        let source = "write_data cg.date\n";
+        let parser = ParserState::new(source);
+        let ast = Ast::new(&parser.source, &parser.tree);
+        let config = DiagnosticsConfig::default();
+        let diagnostics = check(&ast, &config);
+
+        // Filenames with dots should be parsed as a single argument
+        let has_write_data_warning = diagnostics.iter().any(|d| {
+            d.message.contains("write_data")
+        });
+        assert!(
+            !has_write_data_warning,
+            "write_data with dot filename should not produce warnings, but got: {:?}",
+            diagnostics.iter().map(|d| &d.message).collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
+    fn test_unknown_command_is_flagged() {
+        let source = "nonexistent_cmd arg1 arg2\n";
+        let parser = ParserState::new(source);
+        let ast = Ast::new(&parser.source, &parser.tree);
+        let config = DiagnosticsConfig::default();
+        let diagnostics = check(&ast, &config);
+
+        // Unknown commands should still be flagged
+        let has_unknown_warning = diagnostics.iter().any(|d| {
+            d.message.contains("未知命令") && d.message.contains("nonexistent_cmd")
+        });
+        assert!(
+            has_unknown_warning,
+            "nonexistent_cmd should be flagged as unknown, but no warning was produced"
+        );
+    }
 }
