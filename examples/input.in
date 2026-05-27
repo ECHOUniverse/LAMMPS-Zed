@@ -68,8 +68,8 @@ variable        result equal $(1.0 + 2.0 * 3.0)
 variable        str1 string "双引号字符串"
 variable        str2 string '单引号原始字符串'
 variable        str3 string """三引号
-多行字符串
-"""
+                多行字符串
+                """
 
 # ============================================================
 # ============================================================
@@ -99,3 +99,4 @@ if              "${T} > 500.0" then "jump SELF high_temp"
 variable        flag1 equal true
 variable        flag2 equal false
 variable        test equal (v_ke > v_pe) && ${T} < 500.0
+
