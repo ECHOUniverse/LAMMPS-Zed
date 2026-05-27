@@ -1,6 +1,6 @@
 id = "lammps"
 name = "LAMMPS"
-version = "0.2.0"
+version = "0.3.0"
 schema_version = 1
 authors = ["hanxu <eisult@foxmail.com>"]
 description = "LAMMPS molecular dynamics input script (.in) and data file (.data/.lmp) syntax highlighting for Zed"

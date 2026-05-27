@@ -74,6 +74,10 @@ pub struct FormattingConfig {
     #[serde(default = "default_indent")]
     pub indent_size: u8,
     pub max_line_length: Option<usize>,
+    /// Whether continuation lines align with the argument column (true)
+    /// or use a simple indent of indent_size (false).
+    #[serde(default = "default_true")]
+    pub align_continuations: bool,
 }
 
 impl Default for FormattingConfig {
@@ -81,6 +85,7 @@ impl Default for FormattingConfig {
         Self {
             indent_size: 2,
             max_line_length: None,
+            align_continuations: true,
         }
     }
 }

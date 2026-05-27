@@ -1,6 +1,6 @@
 [package]
 name = "lammps"
-version = "0.1.0"
+version = "0.3.0"
 edition = "2021"
 description = "Zed extension for LAMMPS LSP integration"
 repository = "https://github.com/ECHOUniverse/LAMMPS-Zed"

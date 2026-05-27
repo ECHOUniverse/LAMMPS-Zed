@@ -403,7 +403,8 @@ impl LanguageServer for Backend {
             None => return Ok(None),
         };
 
-        let edits = crate::formatting::run_formatting(&state.source, &fmt_config);
+        let ast = crate::ast::Ast::new(&state.source, &state.tree);
+        let edits = crate::formatting::run_formatting(&ast, &fmt_config);
         if edits.is_empty() {
             Ok(None)
         } else {
