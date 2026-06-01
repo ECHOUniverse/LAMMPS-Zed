@@ -47,13 +47,22 @@ pub fn run_formatting(ast: &Ast, config: &FormattingConfig) -> Vec<TextEdit> {
         return Vec::new();
     }
 
-    let last_line = ast.source.lines().count().saturating_sub(1) as u32;
+    let total_lines = ast.source.lines().count();
+    let last_line = total_lines.saturating_sub(1) as u32;
     let last_char = ast
         .source
         .lines()
         .last()
         .map(|l| l.len() as u32)
         .unwrap_or(0);
+
+    // 如果源文本以 \n 结尾，将替换范围延伸到末尾换行符之后，
+    // 防止替换后末尾换行符残留产生两个空行。
+    let (end_line, end_char) = if ast.source.ends_with('\n') && !ast.source.is_empty() {
+        (last_line + 1, 0)
+    } else {
+        (last_line, last_char)
+    };
 
     vec![TextEdit {
         range: Range {
@@ -62,8 +71,8 @@ pub fn run_formatting(ast: &Ast, config: &FormattingConfig) -> Vec<TextEdit> {
                 character: 0,
             },
             end: Position {
-                line: last_line,
-                character: last_char,
+                line: end_line,
+                character: end_char,
             },
         },
         new_text: final_text,
@@ -370,6 +379,47 @@ mod tests {
         edits[0].new_text.clone()
     }
 
+    /// 模拟 LSP 客户端应用 TextEdit：用 new_text 替换 range 范围内的文本，
+    /// 返回完整的格式化后文档文本。
+    fn apply_format(source: &str, config: &FormattingConfig) -> String {
+        let parser = ParserState::new(source);
+        let ast = Ast::new(&parser.source, &parser.tree);
+        let edits = run_formatting(&ast, config);
+        if edits.is_empty() {
+            return source.to_string();
+        }
+        let edit = &edits[0];
+        let range = &edit.range;
+
+        // 将 LSP Position 转换为源文本中的字节偏移
+        let lines: Vec<&str> = source.lines().collect();
+        let mut start_byte = 0usize;
+        for (i, line) in lines.iter().enumerate() {
+            if i < range.start.line as usize {
+                start_byte += line.len() + 1; // +1 for \n
+            } else {
+                start_byte += range.start.character as usize;
+                break;
+            }
+        }
+
+        let mut end_byte = 0usize;
+        for (i, line) in lines.iter().enumerate() {
+            if i < range.end.line as usize {
+                end_byte += line.len() + 1;
+            } else {
+                end_byte += range.end.character as usize;
+                break;
+            }
+        }
+
+        let mut result = String::with_capacity(source.len());
+        result.push_str(&source[..start_byte]);
+        result.push_str(&edit.new_text);
+        result.push_str(&source[end_byte..]);
+        result
+    }
+
     fn default_config() -> FormattingConfig {
         FormattingConfig::default()
     }
@@ -563,6 +613,34 @@ mod tests {
         let result = format("run\n", &default_config());
         assert!(result.contains("run"), "bare command should be preserved");
         assert!(result.ends_with('\n'), "should end with newline");
+    }
+
+    #[test]
+    fn test_format_no_double_trailing_newline() {
+        // 验证格式化后末尾只有一个空行，不会产生两个空行
+        let input = "units metal\nboundary p p p\n";
+        let result = apply_format(input, &default_config());
+        assert!(result.ends_with('\n'), "should have trailing newline");
+        assert!(!result.ends_with("\n\n"), "should NOT have double trailing newline");
+    }
+
+    #[test]
+    fn test_format_idempotent_applied() {
+        // 验证模拟实际范围替换后，再次格式化不产生额外修改（幂等性）
+        let input = "fix 1 all nve\ncompute myTemp all temp\nunits metal\n";
+        let first = apply_format(input, &default_config());
+        let second = apply_format(&first, &default_config());
+        assert_eq!(first, second, "formatting should be idempotent after actual edit application");
+        assert!(!first.ends_with("\n\n"), "should not have double trailing newline");
+    }
+
+    #[test]
+    fn test_format_no_trailing_newline_input() {
+        // 输入末尾没有换行符时，格式化后应补充一个换行符
+        let input = "units metal";
+        let result = apply_format(input, &default_config());
+        assert!(result.ends_with('\n'), "should have trailing newline");
+        assert!(!result.ends_with("\n\n"), "should NOT have double trailing newline");
     }
 
     #[test]

@@ -99,4 +99,3 @@ if              "${T} > 500.0" then "jump SELF high_temp"
 variable        flag1 equal true
 variable        flag2 equal false
 variable        test equal (v_ke > v_pe) && ${T} < 500.0
-
