@@ -8,6 +8,7 @@ pub struct SemanticCache {
     pub variable_defs: HashMap<String, SourceLocation>,
     pub fix_defs: HashMap<String, SourceLocation>,
     pub compute_defs: HashMap<String, SourceLocation>,
+    pub group_defs: HashMap<String, SourceLocation>,
     pub labels: HashMap<String, SourceLocation>,
     pub variable_refs: Vec<(String, SourceLocation)>,
     pub include_targets: Vec<IncludeTargetInfo>,
@@ -70,7 +71,15 @@ impl SemanticCache {
             );
         }
 
-        // 4. Variable references
+        // 4. Group definitions
+        for def in ast.groups() {
+            cache.group_defs.insert(
+                def.name.to_string(),
+                SourceLocation::from_node(def.node, uri),
+            );
+        }
+
+        // 5. Variable references
         for r in ast.variable_references() {
             cache.variable_refs.push((
                 r.name.to_string(),
@@ -78,7 +87,7 @@ impl SemanticCache {
             ));
         }
 
-        // 5. Include targets
+        // 6. Include targets
         for t in ast.include_targets() {
             cache.include_targets.push(IncludeTargetInfo {
                 file_path: t.file_path.to_string(),
@@ -88,7 +97,7 @@ impl SemanticCache {
             });
         }
 
-        // 6. Labels
+        // 7. Labels
         for l in ast.labels() {
             cache.labels.insert(
                 l.name.to_string(),

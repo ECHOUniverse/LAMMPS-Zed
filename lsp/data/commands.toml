@@ -507,7 +507,7 @@ category = "Setup"
 doc_short = "Define which per-atom attributes are stored"
 doc_full = "Define what attributes are associated with each atom. This determines what data is stored, communicated, and output.\n\n[Documentation](https://docs.lammps.org/atom_style.html)"
 parameters = [
-  { name = "style", param_type = "Enum(['atomic', 'charge', 'sphere', 'ellipsoid', 'full', 'molecular', 'body', 'line', 'tri', 'template', 'hybrid'])", required = true, doc = "Atom style" },
+  { name = "style", param_type = "Enum(['atomic', 'charge', 'sphere', 'bond', 'full', 'molecular', 'body', 'dipole', 'dpd', 'ellipsoid', 'line', 'meso', 'peri', 'smd', 'spin', 'template', 'tri', 'wavepacket', 'hybrid'])", required = true, doc = "Atom style" },
   { name = "args", param_type = "Repeat(String)", required = false, doc = "Arguments for hybrid style" },
 ]
 

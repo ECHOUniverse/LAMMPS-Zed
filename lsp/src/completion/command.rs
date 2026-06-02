@@ -12,19 +12,15 @@ use crate::commands::COMMAND_DB;
 pub fn complete_commands(ast: &Ast, offset: usize, scope: &[Node]) -> Vec<CompletionItem> {
     let mut items = Vec::new();
 
-    // Determine whether we're in a command-name context.
-    // Heuristics:
-    //   1. The deepest scope node is `command_name`          → already typing a command
-    //   2. The deepest scope node is `command` and the cursor is near its start
-    //   3. The cursor is at the very start of a line (possibly after a `&` continuation)
-    let is_command_context = scope.iter().any(|n| {
-        let k = n.kind();
-        k == "command_name"
-            || k == "command"
-            || k == "input_script"
-    });
+    // Command completions are ONLY shown when:
+    // 1. The cursor is directly inside a `command_name` node, OR
+    // 2. The cursor is at the very start of a line (after \n, &\n, or in an empty doc)
+    //
+    // All other positions (arguments, fix/compute bodies, …) are NOT
+    // command-name contexts.
+    let in_command_name = scope.iter().any(|n| n.kind() == "command_name");
 
-    if !is_command_context {
+    if !in_command_name {
         let text_before = &ast.source[..offset];
         let is_line_start = text_before.is_empty()
             || text_before.ends_with('\n')
@@ -134,6 +130,7 @@ mod tests {
 
     #[test]
     fn test_extract_partial_word_after_space() {
-        assert_eq!(extract_partial_word("pair_style eam\npai", 17), "pai");
+        // offset 18 = end of "pai" (cursor past the last char)
+        assert_eq!(extract_partial_word("pair_style eam\npai", 18), "pai");
     }
 }

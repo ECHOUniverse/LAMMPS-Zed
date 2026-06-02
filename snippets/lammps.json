@@ -1,24 +1,4 @@
 {
-  "Fix NPT": {
-    "prefix": "fix npt",
-    "body": ["fix ${1:ID} ${2:group} npt temp ${3:T_start} ${4:T_stop} ${5:T_damp} iso ${6:P_start} ${7:P_stop} ${8:P_damp}"],
-    "description": "NPT ensemble fix"
-  },
-  "Fix NVE": {
-    "prefix": "fix nve",
-    "body": ["fix ${1:ID} ${2:group} nve"],
-    "description": "NVE ensemble fix"
-  },
-  "Fix NVT": {
-    "prefix": "fix nvt",
-    "body": ["fix ${1:ID} ${2:group} nvt temp ${3:T_start} ${4:T_stop} ${5:T_damp}"],
-    "description": "NVT ensemble fix"
-  },
-  "Fix langevin": {
-    "prefix": "fix langevin",
-    "body": ["fix ${1:ID} ${2:group} langevin ${3:T_start} ${4:T_stop} ${5:T_damp} ${6:seed}"],
-    "description": "Langevin thermostat fix"
-  },
   "Variable equal": {
     "prefix": "variable",
     "body": ["variable ${1:name} equal ${2:value}"],
@@ -128,56 +108,6 @@
     "prefix": "#=",
     "body": ["# ============================================================", "# ${1:section name}", "# ============================================================"],
     "description": "Section header comment"
-  },
-  "Fix NPH": {
-    "prefix": "fix nph",
-    "body": ["fix ${1:ID} ${2:group} nph iso ${3:P_start} ${4:P_stop} ${5:P_damp}"],
-    "description": "NPH ensemble fix"
-  },
-  "Fix deform": {
-    "prefix": "fix deform",
-    "body": ["fix ${1:ID} ${2:group} deform ${3:erate} ${4:style} ${5:dir} ${6:value} units ${7:box}"],
-    "description": "Deformation fix"
-  },
-  "Fix ave/time": {
-    "prefix": "fix ave/time",
-    "body": ["fix ${1:ID} ${2:group} ave/time ${3:Nevery} ${4:Nrepeat} ${5:Nfreq} ${6:value1} ${7:value2}"],
-    "description": "Time-averaged output fix"
-  },
-  "Fix print": {
-    "prefix": "fix print",
-    "body": ["fix ${1:ID} ${2:group} print ${3:interval} \"${4:message}\" file ${5:filename}"],
-    "description": "Print message during simulation"
-  },
-  "Fix setforce": {
-    "prefix": "fix setforce",
-    "body": ["fix ${1:ID} ${2:group} setforce 0.0 0.0 0.0"],
-    "description": "Set forces to zero"
-  },
-  "Fix spring": {
-    "prefix": "fix spring",
-    "body": ["fix ${1:ID} ${2:group} spring tether ${3:K} ${4:x} ${5:y} ${6:z} 0.0"],
-    "description": "Spring tether fix"
-  },
-  "Fix wall/lj126": {
-    "prefix": "fix wall/lj126",
-    "body": ["fix ${1:ID} ${2:group} wall/lj126 ${3:face} ${4:epsilon} ${5:sigma} ${6:cutoff}"],
-    "description": "Lennard-Jones wall fix"
-  },
-  "Fix wall/harmonic": {
-    "prefix": "fix wall/harmonic",
-    "body": ["fix ${1:ID} ${2:group} wall/harmonic ${3:face} ${4:K} ${5:z0}"],
-    "description": "Harmonic wall fix"
-  },
-  "Fix recenter": {
-    "prefix": "fix recenter",
-    "body": ["fix ${1:ID} ${2:group} recenter ${3:x} ${4:y} ${5:z}"],
-    "description": "Recenter coordinates fix"
-  },
-  "Fix momentum": {
-    "prefix": "fix momentum",
-    "body": ["fix ${1:ID} ${2:group} momentum ${3:linear} ${4:angular}"],
-    "description": "Zero momentum fix"
   },
   "Pair style lj/cut": {
     "prefix": "pair_style lj/cut",

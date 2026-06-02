@@ -19,6 +19,14 @@ pub fn complete_styles(ast: &Ast, offset: usize, scope: &[Node]) -> Vec<Completi
         return items;
     };
 
+    // ── Strong guard: refuse to offer styles if the line looks like a
+    // fix/compute command that hasn't reached the style position yet.
+    // For fix: `fix ID group-ID style` → need ≥ 3 words before the cursor.
+    // For compute: same structure.
+    if !is_style_context_guard(ast.source, offset) {
+        return items;
+    }
+
     // Extract partial text the user has already typed.
     let partial = extract_partial_style_word(ast.source, offset);
 
@@ -51,18 +59,21 @@ pub fn complete_styles(ast: &Ast, offset: usize, scope: &[Node]) -> Vec<Completi
 fn detect_style_context<'a>(
     ast: &Ast<'a>,
     scope: &[Node<'a>],
-    offset: usize,
+    _offset: usize,
 ) -> Option<&'a [crate::commands::schema::StyleDef]> {
     // Walk scope from deepest to shallowest looking for hints.
     for node in scope.iter().rev() {
         match node.kind() {
-            // Tree-sitter node: `fix_style` or `compute_style`
+            // Tree-sitter node: `fix_style` or `compute_style` — only return
+            // styles when cursor is literally inside the style text.
+            // We deliberately do NOT try to "predict" the style position from
+            // fix/compute/ERROR wrappers — that leads to leaking style names
+            // at the wrong cursor positions (e.g., `fix 1` showing wall/lj126).
             "fix_style" => return Some(&COMMAND_DB.fix_styles),
             "compute_style" => return Some(&COMMAND_DB.compute_styles),
 
             // If we hit a `command` node, look at the command_name child.
             "command" => {
-                // Find the command_name child.
                 for i in 0..node.named_child_count() {
                     if let Some(child) = node.named_child(i) {
                         if child.kind() == "command_name" {
@@ -70,27 +81,6 @@ fn detect_style_context<'a>(
                             return style_list_for_command(cmd_name);
                         }
                     }
-                }
-            }
-
-            // If we're in a `fix` node and the cursor is past fix_id,
-            // we want fix styles.
-            "fix" => {
-                let has_style = (0..node.named_child_count())
-                    .filter_map(|i| node.named_child(i))
-                    .any(|c| c.kind() == "fix_style");
-                if !has_style && is_past_fix_id(*node, offset) {
-                    return Some(&COMMAND_DB.fix_styles);
-                }
-            }
-
-            // Same for compute.
-            "compute" => {
-                let has_style = (0..node.named_child_count())
-                    .filter_map(|i| node.named_child(i))
-                    .any(|c| c.kind() == "compute_style");
-                if !has_style && is_past_compute_id(*node, offset) {
-                    return Some(&COMMAND_DB.compute_styles);
                 }
             }
 
@@ -116,28 +106,25 @@ fn style_list_for_command(
     }
 }
 
-/// Check whether the byte offset is past the fix_id child of a `fix` node.
-fn is_past_fix_id(node: Node, offset: usize) -> bool {
-    for i in 0..node.named_child_count() {
-        if let Some(child) = node.named_child(i) {
-            if child.kind() == "fix_id" && child.end_byte() <= offset {
-                return true;
-            }
-        }
+/// Hard guard: for fix/compute commands, the style appears after
+/// `fix ID group` (3 words). Refuse if the cursor hasn't reached
+/// past the group-ID word yet.
+///
+/// For other style commands (pair_style etc.), the style is the
+/// immediately following word (≥ 1 word).
+fn is_style_context_guard(source: &str, offset: usize) -> bool {
+    let text_before = &source[..offset];
+    let line_start = text_before.rfind('\n').map(|i| i + 1).unwrap_or(0);
+    let line = &text_before[line_start..];
+    let words: Vec<&str> = line.split_whitespace().collect();
+    let cmd = words.first().copied().unwrap_or("");
+    match cmd {
+        "fix" | "compute" => words.len() >= 3,       // fix ID group [style...]
+        "pair_style" | "bond_style" | "angle_style"
+        | "dihedral_style" | "improper_style"
+        | "kspace_style" => words.len() >= 1,          // pair_style [style...]
+        _ => true,  // unknown — let the scope logic decide
     }
-    false
-}
-
-/// Check whether the byte offset is past the compute_id child of a `compute` node.
-fn is_past_compute_id(node: Node, offset: usize) -> bool {
-    for i in 0..node.named_child_count() {
-        if let Some(child) = node.named_child(i) {
-            if child.kind() == "compute_id" && child.end_byte() <= offset {
-                return true;
-            }
-        }
-    }
-    false
 }
 
 /// Extract the partial style name being typed.

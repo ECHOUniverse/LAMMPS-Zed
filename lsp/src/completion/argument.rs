@@ -10,24 +10,22 @@ use crate::semantic::SemanticCache;
 /// Provide argument / parameter completions based on the enclosing command.
 pub fn complete_arguments(
     ast: &Ast,
-    _semantic: &SemanticCache,
+    semantic: &SemanticCache,
     offset: usize,
     scope: &[Node],
 ) -> Vec<CompletionItem> {
     let mut items = Vec::new();
 
-    // ── 1. Enumerate-style keyword completions ──────────────────────
+    // ── 1. Thermo keyword completions ──────────────────────────────
     items.extend(complete_thermo_keywords(ast, offset, scope));
-    items.extend(complete_units_enum(ast, offset, scope));
-    items.extend(complete_boundary_enum(ast, offset, scope));
-    items.extend(complete_atom_style_enum(ast, offset, scope));
-    items.extend(complete_dimension_enum(ast, offset, scope));
 
     // ── 2. Expression function completions ─────────────────────────
     items.extend(complete_expression_functions(ast, offset, scope));
 
     // ── 3. Parameter-driven completions for known commands ─────────
-    items.extend(complete_parameters(ast, offset, scope));
+    // (covers units/boundary/dimension/atom_style enums from
+    //  commands.toml — no more hardcoded duplicate lists)
+    items.extend(complete_parameters(ast, semantic, offset, scope));
 
     items
 }
@@ -118,156 +116,6 @@ fn is_inside_thermo_style_custom(ast: &Ast, scope: &[Node]) -> bool {
                     }
                 }
             }
-        }
-    }
-    false
-}
-
-// ────────────────────────────────────────────────────────────────────
-// Enum completions
-// ────────────────────────────────────────────────────────────────────
-
-fn complete_enum_option(
-    ast: &Ast,
-    offset: usize,
-    scope: &[Node],
-    command_name: &str,
-    values: &[(&str, &str)],
-    sort_prefix: &str,
-) -> Vec<CompletionItem> {
-    if !is_command_in_scope(ast, scope, command_name) {
-        return Vec::new();
-    }
-
-    let partial = extract_partial_arg(ast.source, offset);
-    // Don't complete if we're on the command name itself.
-    if partial == command_name {
-        return Vec::new();
-    }
-
-    let mut items = Vec::new();
-    for &(val, doc) in values {
-        if !partial.is_empty() && !val.starts_with(partial) {
-            continue;
-        }
-        items.push(CompletionItem {
-            label: val.to_string(),
-            kind: Some(CompletionItemKind::ENUM_MEMBER),
-            detail: Some(doc.to_string()),
-            sort_text: Some(format!("{}_{}", sort_prefix, val)),
-            ..Default::default()
-        });
-    }
-    items
-}
-
-fn complete_units_enum(
-    ast: &Ast,
-    offset: usize,
-    scope: &[Node],
-) -> Vec<CompletionItem> {
-    complete_enum_option(
-        ast,
-        offset,
-        scope,
-        "units",
-        &[
-            ("lj", "Lennard-Jones reduced units"),
-            ("real", "Real units (kcal/mol, Angstroms)"),
-            ("metal", "Metal units (eV, Angstroms)"),
-            ("si", "SI units (Joules, meters)"),
-            ("cgs", "CGS units (ergs, cm)"),
-            ("electron", "Electron units (Hartree, Bohr)"),
-            ("micro", "Micro units (pg, microns, microseconds)"),
-            ("nano", "Nano units (ag, nm, ps)"),
-        ],
-        "1u",
-    )
-}
-
-fn complete_boundary_enum(
-    ast: &Ast,
-    offset: usize,
-    scope: &[Node],
-) -> Vec<CompletionItem> {
-    complete_enum_option(
-        ast,
-        offset,
-        scope,
-        "boundary",
-        &[
-            ("p", "Periodic"),
-            ("f", "Fixed"),
-            ("s", "Shrink-wrapped"),
-            ("m", "Shrink-wrapped with minimum value"),
-        ],
-        "1u",
-    )
-}
-
-fn complete_atom_style_enum(
-    ast: &Ast,
-    offset: usize,
-    scope: &[Node],
-) -> Vec<CompletionItem> {
-    complete_enum_option(
-        ast,
-        offset,
-        scope,
-        "atom_style",
-        &[
-            ("atomic", "Point particles"),
-            ("charge", "Point particles with charge"),
-            ("sphere", "Spherical particles"),
-            ("bond", "Bonded particles"),
-            ("angle", "Angled particles"),
-            ("full", "Molecular particles with charge"),
-            ("molecular", "Uncharged molecular particles"),
-            ("hybrid", "Multiple atom styles"),
-            ("body", "Rigid body particles"),
-            ("dipole", "Point particles with dipole moment"),
-            ("dpd", "Dissipative particle dynamics"),
-            ("ellipsoid", "Ellipsoidal particles"),
-            ("line", "Line segment particles"),
-            ("meso", "Smoothed particle hydrodynamics"),
-            ("peri", "Peridynamic particles"),
-            ("smd", "Smooth mach dynamics"),
-            ("spin", "SPIN particles"),
-            ("template", "Template-based particles"),
-            ("tri", "Triangular particles"),
-            ("wavepacket", "Wave packets"),
-        ],
-        "1u",
-    )
-}
-
-fn complete_dimension_enum(
-    ast: &Ast,
-    offset: usize,
-    scope: &[Node],
-) -> Vec<CompletionItem> {
-    complete_enum_option(
-        ast,
-        offset,
-        scope,
-        "dimension",
-        &[("2", "2-dimensional simulation"), ("3", "3-dimensional simulation")],
-        "1u",
-    )
-}
-
-fn is_command_in_scope(ast: &Ast, scope: &[Node], target: &str) -> bool {
-    for node in scope.iter().rev() {
-        if node.kind() == "command" {
-            for i in 0..node.named_child_count() {
-                if let Some(child) = node.named_child(i) {
-                    if child.kind() == "command_name" && ast.node_text(child) == target {
-                        return true;
-                    }
-                }
-            }
-            // Only check the innermost command.
-            break;
         }
     }
     false
@@ -378,6 +226,7 @@ fn complete_expression_functions(
 
 fn complete_parameters(
     ast: &Ast,
+    semantic: &SemanticCache,
     offset: usize,
     scope: &[Node],
 ) -> Vec<CompletionItem> {
@@ -398,33 +247,65 @@ fn complete_parameters(
 
     if arg_index < all_params.len() {
         let param = &all_params[arg_index];
-        items.extend(complete_for_param_type(param, ast, offset));
+        items.extend(complete_for_param_type(param, semantic, ast, offset));
     }
 
-    // Also offer all remaining parameter names as snippets.
-    for (i, param) in all_params.iter().enumerate() {
-        if i < arg_index {
-            continue;
+    // Offer the current + next parameter name as snippets (at most 2),
+    // instead of dumping all remaining parameters which clutters the UI.
+    // For fix/compute commands, skip snippets entirely — the type-based
+    // completions are sufficient and parameter-name hints are noisy.
+    let is_fix_or_compute = cmd_def.name == "fix" || cmd_def.name == "compute";
+    if !is_fix_or_compute {
+        let snippet_end = std::cmp::min(arg_index + 2, all_params.len());
+        for i in arg_index..snippet_end {
+            let param = &all_params[i];
+            let prefix = if param.required { "" } else { "[" };
+            let suffix = if param.required { "" } else { "]" };
+            items.push(CompletionItem {
+                label: format!("{}{}{}", prefix, param.name, suffix),
+                kind: Some(CompletionItemKind::SNIPPET),
+                detail: Some(param.doc.clone()),
+                sort_text: Some(format!("1p_{:03}_{}", i, param.name)),
+                ..Default::default()
+            });
         }
-        let prefix = if param.required { "" } else { "[" };
-        let suffix = if param.required { "" } else { "]" };
-        items.push(CompletionItem {
-            label: format!("{}{}{}", prefix, param.name, suffix),
-            kind: Some(CompletionItemKind::SNIPPET),
-            detail: Some(param.doc.clone()),
-            sort_text: Some(format!("1p_{:03}_{}", i, param.name)),
-            ..Default::default()
-        });
     }
 
     items
 }
 
 /// Find which CommandDef corresponds to the enclosing command node.
+/// Recognises both generic `command` nodes and specialised `fix`/`compute`
+/// definition nodes (including ERROR-wrapped incomplete forms).
 fn find_enclosing_command_def<'a>(
     ast: &Ast<'a>,
     scope: &[Node<'a>],
 ) -> Option<&'a CommandDef> {
+    // Check for fix / compute — look both in scope and in ERROR wrapper nodes.
+    let is_fix =
+        scope.iter().any(|n| matches!(n.kind(), "fix" | "fix_id"))
+        || scope.iter().any(|n| {
+            n.kind() == "ERROR"
+                && (0..n.named_child_count()).any(|i| {
+                    n.named_child(i).map_or(false, |c| c.kind() == "fix_id")
+                })
+        });
+    let is_compute =
+        scope.iter().any(|n| matches!(n.kind(), "compute" | "compute_id"))
+        || scope.iter().any(|n| {
+            n.kind() == "ERROR"
+                && (0..n.named_child_count()).any(|i| {
+                    n.named_child(i).map_or(false, |c| c.kind() == "compute_id")
+                })
+        });
+    if is_fix {
+        return COMMAND_DB.general_commands.iter().find(|c| c.name == "fix");
+    }
+    if is_compute {
+        return COMMAND_DB.general_commands.iter().find(|c| c.name == "compute");
+    }
+
+    // Generic command path.
     for node in scope.iter().rev() {
         if node.kind() == "command" {
             for i in 0..node.named_child_count() {
@@ -445,25 +326,73 @@ fn find_enclosing_command_def<'a>(
 }
 
 /// Estimate which parameter index the cursor is at.
+///
+/// For generic `command` nodes, it counts `args_under` sections past the cursor.
+/// For `fix`/`compute` definition nodes, it counts the structured children
+/// (`fix_id`, `group_id`, `fix_style`, `args_under`) that end before the cursor.
 fn estimate_argument_index(_ast: &Ast, scope: &[Node], offset: usize) -> usize {
-    // Find the enclosing command node.
-    let cmd_node = scope.iter().rev().find(|n| n.kind() == "command");
-    let Some(cmd_node) = cmd_node else {
-        return 0;
-    };
+    // Check if we're inside a fix / compute context.
+    // Also check ERROR wrapper nodes that contain fix_id / compute_id children.
+    let in_fix =
+        scope.iter().any(|n| matches!(n.kind(), "fix" | "fix_id"))
+        || scope.iter().any(|n| {
+            n.kind() == "ERROR"
+                && (0..n.named_child_count()).any(|i| {
+                    n.named_child(i).map_or(false, |c| c.kind() == "fix_id")
+                })
+        });
+    let in_compute =
+        scope.iter().any(|n| matches!(n.kind(), "compute" | "compute_id"))
+        || scope.iter().any(|n| {
+            n.kind() == "ERROR"
+                && (0..n.named_child_count()).any(|i| {
+                    n.named_child(i).map_or(false, |c| c.kind() == "compute_id")
+                })
+        });
 
-    // Count arguments before the cursor position.
-    // The first named child is `command_name`, subsequent ones are args.
+    if in_fix || in_compute {
+        // The enclosing definition may be an ERROR node (partial parse) or
+        // a proper fix/compute node.
+        let def_node = scope.iter().rev().find(|n| {
+            matches!(n.kind(), "fix" | "compute" | "ERROR")
+        });
+        if let Some(node) = def_node {
+            return estimate_definition_arg_index(*node, offset);
+        }
+    }
+
+    // Fallback: generic command.
+    let cmd_node = scope.iter().rev().find(|n| n.kind() == "command");
+    if let Some(node) = cmd_node {
+        return estimate_generic_arg_index(*node, offset);
+    }
+
+    0
+}
+
+/// Count arguments for generic `command` nodes (command_name + args_under).
+fn estimate_generic_arg_index(cmd_node: Node, offset: usize) -> usize {
     let mut arg_count = 0;
     for i in 0..cmd_node.named_child_count() {
         if let Some(child) = cmd_node.named_child(i) {
             let k = child.kind();
-            // Skip the command_name itself.
             if k == "command_name" {
                 continue;
             }
-            // If this argument ends before the cursor, count it.
-            if child.end_byte() <= offset {
+            // Unwrap args_under container to count individual arguments.
+            // Use strict "<" so that partial text the user is still typing
+            // is not counted as a completed argument.
+            if k == "args_under" {
+                for j in 0..child.named_child_count() {
+                    if let Some(arg) = child.named_child(j) {
+                        if arg.end_byte() < offset {
+                            arg_count += 1;
+                        } else {
+                            return arg_count;
+                        }
+                    }
+                }
+            } else if child.end_byte() < offset {
                 arg_count += 1;
             } else {
                 break;
@@ -473,17 +402,56 @@ fn estimate_argument_index(_ast: &Ast, scope: &[Node], offset: usize) -> usize {
     arg_count
 }
 
-/// Generate completions specific to a ParameterType.
+/// Count arguments for `fix`/`compute` definition nodes.
+/// The fixed-position children are fix_id / group_id / fix_style (or compute_id / group_id / compute_style),
+/// followed by an optional args_under.
+fn estimate_definition_arg_index(def_node: Node, offset: usize) -> usize {
+    let mut arg_count = 0;
+    for i in 0..def_node.named_child_count() {
+        if let Some(child) = def_node.named_child(i) {
+            let k = child.kind();
+            // args_under is a container — skip it, handle its children
+            // individually below so that partial args are counted correctly.
+            if k == "args_under" {
+                for j in 0..child.named_child_count() {
+                    if let Some(arg) = child.named_child(j) {
+                        if arg.end_byte() <= offset {
+                            arg_count += 1;
+                        } else {
+                            return arg_count + 2; // +2 for fix_id + group_id
+                        }
+                    }
+                }
+            } else {
+                // fix_id / group_id / fix_style — count if fully typed.
+                if child.end_byte() <= offset {
+                    arg_count += 1;
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+    arg_count
+}
+
+/// Generate completions specific to a ParameterType, filtered by the
+/// partial text the user has already typed at the cursor.
 fn complete_for_param_type(
     param: &crate::commands::schema::Parameter,
-    _ast: &Ast,
-    _offset: usize,
+    semantic: &SemanticCache,
+    ast: &Ast,
+    offset: usize,
 ) -> Vec<CompletionItem> {
+    let partial = extract_partial_arg(ast.source, offset);
     let mut items = Vec::new();
 
     match &param.param_type {
         ParameterType::Enum(values) => {
             for v in values {
+                if !partial.is_empty() && !v.starts_with(partial) {
+                    continue;
+                }
                 items.push(CompletionItem {
                     label: v.clone(),
                     kind: Some(CompletionItemKind::ENUM_MEMBER),
@@ -495,6 +463,9 @@ fn complete_for_param_type(
         }
         ParameterType::Boolean => {
             for &val in &[".true.", ".false.", "yes", "no", "on", "off"] {
+                if !partial.is_empty() && !val.starts_with(partial) {
+                    continue;
+                }
                 items.push(CompletionItem {
                     label: val.to_string(),
                     kind: Some(CompletionItemKind::KEYWORD),
@@ -505,18 +476,114 @@ fn complete_for_param_type(
             }
         }
         ParameterType::Keyword(kw) => {
-            items.push(CompletionItem {
-                label: kw.clone(),
-                kind: Some(CompletionItemKind::KEYWORD),
-                detail: Some(format!("{}: {}", param.name, param.doc)),
-                sort_text: Some(format!("1k_{}", kw)),
-                ..Default::default()
-            });
+            if partial.is_empty() || kw.starts_with(partial) {
+                items.push(CompletionItem {
+                    label: kw.clone(),
+                    kind: Some(CompletionItemKind::KEYWORD),
+                    detail: Some(format!("{}: {}", param.name, param.doc)),
+                    sort_text: Some(format!("1k_{}", kw)),
+                    ..Default::default()
+                });
+            }
+        }
+        ParameterType::FixId => {
+            for name in semantic.fix_defs.keys() {
+                if !partial.is_empty() && !name.starts_with(partial) {
+                    continue;
+                }
+                items.push(CompletionItem {
+                    label: name.clone(),
+                    kind: Some(CompletionItemKind::PROPERTY),
+                    detail: Some(format!("{}: {}", param.name, param.doc)),
+                    sort_text: Some(format!("1i_fix_{}", name)),
+                    ..Default::default()
+                });
+            }
+        }
+        ParameterType::ComputeId => {
+            for name in semantic.compute_defs.keys() {
+                if !partial.is_empty() && !name.starts_with(partial) {
+                    continue;
+                }
+                items.push(CompletionItem {
+                    label: name.clone(),
+                    kind: Some(CompletionItemKind::PROPERTY),
+                    detail: Some(format!("{}: {}", param.name, param.doc)),
+                    sort_text: Some(format!("1i_comp_{}", name)),
+                    ..Default::default()
+                });
+            }
+        }
+        ParameterType::GroupId => {
+            // "all" is the built-in default group.
+            if partial.is_empty() || "all".starts_with(partial) {
+                items.push(CompletionItem {
+                    label: "all".to_string(),
+                    kind: Some(CompletionItemKind::VALUE),
+                    detail: Some("Built-in group: all atoms".to_string()),
+                    sort_text: Some("1g_all".to_string()),
+                    ..Default::default()
+                });
+            }
+            for name in semantic.group_defs.keys() {
+                if !partial.is_empty() && !name.starts_with(partial) {
+                    continue;
+                }
+                items.push(CompletionItem {
+                    label: name.clone(),
+                    kind: Some(CompletionItemKind::VALUE),
+                    detail: Some(format!("{}: {}", param.name, param.doc)),
+                    sort_text: Some(format!("1g_{}", name)),
+                    ..Default::default()
+                });
+            }
+        }
+        ParameterType::VariableName => {
+            for name in semantic.variable_defs.keys() {
+                if !partial.is_empty() && !name.starts_with(partial) {
+                    continue;
+                }
+                items.push(CompletionItem {
+                    label: name.clone(),
+                    kind: Some(CompletionItemKind::VARIABLE),
+                    detail: Some(format!("{}: {}", param.name, param.doc)),
+                    sort_text: Some(format!("1v_{}", name)),
+                    ..Default::default()
+                });
+            }
+        }
+        ParameterType::Variable => {
+            for name in semantic.variable_defs.keys() {
+                if !partial.is_empty() && !name.starts_with(partial) {
+                    continue;
+                }
+                items.push(CompletionItem {
+                    label: name.clone(),
+                    kind: Some(CompletionItemKind::VARIABLE),
+                    detail: Some(format!("{}: {}", param.name, param.doc)),
+                    sort_text: Some(format!("1v_{}", name)),
+                    ..Default::default()
+                });
+            }
+        }
+        ParameterType::Label => {
+            for name in semantic.labels.keys() {
+                if !partial.is_empty() && !name.starts_with(partial) {
+                    continue;
+                }
+                items.push(CompletionItem {
+                    label: name.clone(),
+                    kind: Some(CompletionItemKind::KEYWORD),
+                    detail: Some(format!("{}: {}", param.name, param.doc)),
+                    sort_text: Some(format!("1l_{}", name)),
+                    ..Default::default()
+                });
+            }
         }
         _ => {
-            // For other types (Integer, Float, String, etc.) we just show the
-            // parameter hint. The snippet-based completion (shown in
-            // complete_parameters above) is sufficient.
+            // For other types (Integer, Float, String, Style, FileName,
+            // Expression, Repeat) we just show the parameter hint snippet
+            // from complete_parameters above.
         }
     }
 
@@ -524,8 +591,17 @@ fn complete_for_param_type(
 }
 
 /// Extract the partial argument text at the cursor for filtering.
+/// Returns empty string when cursor is at a whitespace boundary (start of a new word).
 fn extract_partial_arg(source: &str, offset: usize) -> &str {
+    if offset == 0 {
+        return "";
+    }
     let before = &source[..offset];
+    // If the character just before the cursor is whitespace, the user hasn't
+    // started typing the current word yet — return empty so all options show.
+    if before.chars().last().map_or(true, |c| c.is_whitespace()) {
+        return "";
+    }
     let word_start = before
         .rfind(|c: char| c.is_whitespace())
         .map(|i| i + 1)
@@ -539,8 +615,11 @@ mod tests {
 
     #[test]
     fn test_extract_partial_arg() {
-        assert_eq!(extract_partial_arg("thermo_style custom step", 23), "step");
+        // offset 24 = end of "step" (cursor past the last char)
+        assert_eq!(extract_partial_arg("thermo_style custom step", 24), "step");
+        // offset 8 = end of "me"
         assert_eq!(extract_partial_arg("units me", 8), "me");
+        // offset 11 = right after "pair_style " (at the space, no word typed yet)
         assert_eq!(extract_partial_arg("pair_style ", 11), "");
     }
 }

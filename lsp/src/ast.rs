@@ -155,6 +155,33 @@ impl<'a> Ast<'a> {
         labels
     }
 
+    /// Find all group definitions (from `group` commands).
+    pub fn groups(&self) -> Vec<GroupDef<'a>> {
+        let mut groups = Vec::new();
+        for cmd in self.commands() {
+            if cmd.kind != CommandKind::General {
+                continue;
+            }
+            let cname = self.command_name(cmd.node).unwrap_or("");
+            if cname == "group" {
+                if let Some(group_name) = self.first_arg_text(cmd.node) {
+                    // Skip group-style keywords (delete, clear, type, id, region,
+                    // variable, dynamic) — those are styles, not group IDs.
+                    match group_name {
+                        "delete" | "clear" | "type" | "id" | "region"
+                        | "variable" | "dynamic" => continue,
+                        _ => {}
+                    }
+                    groups.push(GroupDef {
+                        node: cmd.node,
+                        name: group_name,
+                    });
+                }
+            }
+        }
+        groups
+    }
+
     /// Iterate all comment nodes.
     pub fn comments(&self) -> Vec<Node<'a>> {
         let mut comments = Vec::new();
@@ -471,6 +498,13 @@ pub struct VariableDef<'a> {
 /// A label definition.
 #[derive(Debug, Clone)]
 pub struct LabelDef<'a> {
+    pub node: Node<'a>,
+    pub name: &'a str,
+}
+
+/// A group definition (from `group` command).
+#[derive(Debug, Clone)]
+pub struct GroupDef<'a> {
     pub node: Node<'a>,
     pub name: &'a str,
 }
